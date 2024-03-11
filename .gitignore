@@ -290,4 +290,7 @@ pip-selfcheck.json
 .history
 .ionide
 
+### 개인정보 ### 
+settings.py
+
 # End of https://www.toptal.com/developers/gitignore/api/python,flask,visualstudiocode,venv

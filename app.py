@@ -1,5 +1,12 @@
 from flask import Flask
+from settings import ca_path
+from pymongo import MongoClient  
+import certifi
 app = Flask(__name__)
+
+ca = certifi.where()
+client = MongoClient(ca_path, tlsCAFile=ca)
+db = client.dbsparta
 
 @app.route('/')
 def home():

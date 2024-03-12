@@ -1,21 +1,30 @@
 import datetime
 from flask import Flask, render_template, request, redirect, jsonify
-from settings import ca_path
+from settings import ca_path, naver_client_id, naver_secret_key
 from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required
 from pymongo import MongoClient
 import xml.etree.ElementTree as elemTree
 import certifi,hashlib
-import requests
-from flask_cors import CORS
+import os
+import sys
+import urllib.request
+import ssl
+
+ssl._create_default_https_context = ssl._create_unverified_context
 
 app = Flask(__name__)
 jwt = JWTManager(app)
-CORS(app)
 
+# 파싱
 tree = elemTree.parse('keys.xml')
 secretkey = tree.find('string[@name="secret_key"]').text
 
+# 네이버 api 
+client_id = naver_client_id
+client_secret = naver_secret_key 
+
 app.config['SECRET_KEY'] = secretkey
+app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 
 ca = certifi.where()
 client = MongoClient(ca_path, tlsCAFile=ca)
@@ -24,6 +33,7 @@ db = client.dbsparta
 @app.route('/')
 def home():
    return render_template('index.html')
+
 
 # 회원가입
 @app.route('/signup', methods=['GET','POST'])
@@ -44,6 +54,7 @@ def register():
       return jsonify({'result':'success'})
     else:
       return render_template('signup.html') 
+      
       
 # 로그인
 @app.route('/login', methods=['GET','POST'])
@@ -67,45 +78,43 @@ def login():
     else:
         # GET 요청을 처리하기 위한 로직 추가
       return render_template('login.html') 
-    
-client_id = 'qwYeDHfb22N5SlsoHEvL'
-client_secret = '1IhM71SEUT'
-
-@app.route('/write', methods=['GET'])
-def write():
-    search_query = request.args.get('search_give')
-    # 여기에 네이버 API를 통해 검색하는 로직을 추가하세요.
-    # 예를 들어, 검색어를 로그에 출력하도록 하겠습니다.
-    print("Received search query:", search_query)
-    return jsonify({'result': 'success'})
-
-@app.route('/write', methods=['GET'])
-def search_local():
-    # 요청 헤더에서 클라이언트 아이디와 클라이언트 시크릿을 가져옵니다.
-    client_id = request.headers.get('X-Naver-Client-Id')
-    client_secret = request.headers.get('X-Naver-Client-Secret')
-
-    # 요청 헤더에서 가져온 클라이언트 아이디와 클라이언트 시크릿을 이용하여 네이버 API에 요청을 보냅니다.
-    if client_id and client_secret:
-        api_url = 'https://openapi.naver.com/v1/search/local'
-        headers = {
-            'X-Naver-Client-Id': client_id,
-            'X-Naver-Client-Secret': client_secret
-        }
-        # 네이버 API에 요청을 보냅니다.
-        response = requests.get(api_url, headers=headers, params=request.args)
-
-        # 네이버 API로부터 받은 응답을 클라이언트에게 반환합니다.
-        return jsonify(response.json()), response.status_code
-    else:
-        return jsonify({'error': '클라이언트 아이디와 클라이언트 시크릿이 요청 헤더에 포함되어야 합니다.'}), 400
+  
 
 # 토큰의 유효성 검사
-@app.route('/a', methods = ['GET'])
-@jwt_required()
-def my_page():
-    current_user = get_jwt_identity()
-    return jsonify(msg=f'Welcome, {current_user}')
+@app.route('/api/example', methods=['GET'])
+@jwt_required
+def protected():
+    username = get_jwt_identity()
+    # 토큰 만료시 에러 처리 추후 추가
+    return jsonify({'response': 'from {}'.format(username)}), 200
+  
+  
+# 네이버 검색 API 
+@app.route('/write', methods=['POST'])
+# @jwt_required
+def search_restaurant():
+    search_receive = "대전맛집"
+    encText = urllib.parse.quote(search_receive)
+    
+    url = "https://openapi.naver.com/v1/search/local?query=" + encText # JSON 결과
+    req = urllib.request.Request(url)
+    req.add_header("X-Naver-Client-Id",client_id)
+    req.add_header("X-Naver-Client-Secret",client_secret)
+    response = urllib.request.urlopen(req)
+    rescode = response.getcode()
+    if(rescode==200):
+        response_body = response.read()
+        print(response_body.decode('utf-8'))
+        return jsonify({'resp' : response_body.decode('utf-8')})
+    else:
+        print("Error Code:" + rescode)
 
+   
+# 로그아웃
+@app.route('/logout', methods=['POST'])
+def logout():
+    response = jsonify({'logout': True})
+    return response, 200
+  
 if __name__ == '__main__':  
    app.run('0.0.0.0',port=5000,debug=True)

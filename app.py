@@ -108,6 +108,7 @@ def search_restaurant():
         return jsonify({'resp' : resp_data})
     else:
         print("Error Code:" + rescode)
+        return jsonify({'msg' : "에러가 발생하였습니다"})
 
    
 # 로그아웃

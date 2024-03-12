@@ -194,16 +194,11 @@
             var clientId = 'qwYeDHfb22N5SlsoHEvL';
             var clientSecret = '1IhM71SEUT';
             var search = $('#search').val(); // 검색할 쿼리를 여기에 입력
-
+          
             $.ajax({
                 url: '/write',
-                type: 'GET',
+                type: 'POST',
                 data: {search_give : search},
-                beforeSend: function(xhr) {
-                    xhr.setRequestHeader('Content-Type', 'plain/text');
-                    xhr.setRequestHeader('X-Naver-Client-Id', clientId);
-                    xhr.setRequestHeader('X-Naver-Client-Secret', clientSecret);
-                },
                 success: function(response) {
                     console.log(response); // 요청에 대한 응답 데이터
                 },

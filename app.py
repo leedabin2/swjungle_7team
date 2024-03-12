@@ -78,8 +78,6 @@ def login():
     else:
         # GET 요청을 처리하기 위한 로직 추가
       return render_template('login.html') 
-  
-
 
 # 토큰의 유효성 검사
 @app.route('/api/example', methods=['GET'])
@@ -94,7 +92,7 @@ def protected():
 @app.route('/write', methods=['POST'])
 # @jwt_required
 def search_restaurant():
-    search_receive = "대전맛집"
+    search_receive = request.form['search_give']
     encText = urllib.parse.quote(search_receive)
     
     url = "https://openapi.naver.com/v1/search/local?query=" + encText # JSON 결과
@@ -106,7 +104,8 @@ def search_restaurant():
     if(rescode==200):
         response_body = response.read()
         print(response_body.decode('utf-8'))
-        return jsonify({'resp' : response_body.decode('utf-8')})
+        resp_data = response_body.decode('utf-8')
+        return jsonify({'resp' : resp_data})
     else:
         print("Error Code:" + rescode)
 

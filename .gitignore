@@ -293,4 +293,7 @@ pip-selfcheck.json
 ### 개인정보 ### 
 settings.py
 
+### auth keys ###
+keys.xml
+
 # End of https://www.toptal.com/developers/gitignore/api/python,flask,visualstudiocode,venv

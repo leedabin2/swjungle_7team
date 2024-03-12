@@ -31,6 +31,7 @@ app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 ca = certifi.where()
 client = MongoClient(ca_path, tlsCAFile=ca)
 db = client.dbsparta
+collection = db.restaurantlist
 
 @app.route('/')
 def home():
@@ -114,10 +115,9 @@ def search_restaurant():
         response_body = response.read()
         print(response_body.decode('utf-8'))
         resp_data = response_body.decode('utf-8')
-        # db에 데이터 저장 (title, link, address)
+       
         resp_data = json.loads(response_body.decode('utf-8'))
         
-        # db에 데이터 저장 (title, link, address)
         for item in resp_data['items']:
             title = item['title']
             link = item['link']
@@ -125,11 +125,13 @@ def search_restaurant():
 
         restaurant_doc = {'title' : title, 'link' : link, 'address' : address}
         
-        db.restaurantlist.insert_one(restaurant_doc)
-        
-        res = list(db.restaurantlist.find({},{'_id':0}))
-        # 클라이언트한테 데이터 전송
-        return jsonify({'data':res})
+        # db.restaurantlist.insert_one(restaurant_doc)
+        # 중복 제거 후 삽입
+        # collection.insert_one(restaurant_doc,ordered=False)
+        # res = list(db.restaurantlist.find({},{'_id':0}))
+
+        resp_data_to_json = json.dumps(restaurant_doc)
+        return jsonify({'resp_data' : resp_data_to_json})
     else:
         print("Error Code:" + rescode)
         return jsonify({'msg' : "에러가 발생하였습니다"})
@@ -141,5 +143,36 @@ def logout():
     response = jsonify({'logout': True})
     return response, 200
   
+# db에서 검사 후 전
+@app.route('/search/click', methods=["POST"])
+def check_db_and_post_info():
+   username = get_jwt_identity()
+   print(username)
+   address_receive = request.form['address_give']
+   
+  # 유효한 데이터 찾기 (db에 없을시에 에러 반환)
+   find_address_data = db.restaurant.find_one({'address' : address_receive})
+   
+   if find_address_data is None:
+     return jsonify({'msg': "유효한 데이터가 없습니다."})
+   
+   # title/address/link,username json으로 보냄 찾는 address랑 똑같은 데이터만 (GET으로 처리해야하는가)
+   res = list(db.restaurantlist.find({},{'_id':0}),username)
+   return jsonify({'all_info': res}), 200 
+ 
+ # 등록 버튼 클릭시 db에 정보 저
+@app.route('/complete/write', methods=["POST"])
+def register_info():
+    title_receive = request.form['title_give']
+    link_receive = request.form['link_give']
+    address_receive = request.form['address_give']
+    username_receive = request.form['username_give']
+    
+    register_doc = { 'title' : title_receive , 'link' : link_receive, 'address': address_receive, 'username' : username_receive}
+    
+    db.registerlist.insert_one(register_doc)
+    
+    return jsonify({'result':'success'}), 200
+  
 if __name__ == '__main__':  
-   app.run('0.0.0.0',port=5000,debug=True)
+  app.run('0.0.0.0',port=5000,debug=True)

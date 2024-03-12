@@ -17,7 +17,7 @@
         justify-content: space-between;
         align-items: center;
         padding: 10px 20px;
-        background-color: #f0f0f0;
+        background-color: #F0F0F0;
       }
       .project-info {
         display: flex;
@@ -33,7 +33,7 @@
       .login-button,
       .logout-button {
         padding: 8px 16px;
-        background-color: #007bff;
+        background-color: #007BFF;
         color: #fff;
         border: none;
         border-radius: 5px;
@@ -41,7 +41,7 @@
       }
       .add-button {
         padding: 8px 16px;
-        background-color: #28a745;
+        background-color: #28A745;
         color: #fff;
         border: none;
         border-radius: 5px;
@@ -49,7 +49,6 @@
         font-size: 20px;
         margin-top: 10px;
       }
-
       /* 모달 스타일 */
       .modal {
         display: none; /* 모달 초기에는 숨김 */
@@ -64,7 +63,7 @@
         padding-top: 100px; /* 화면 상단으로부터 100px 이상 공백 */
       }
       .modal-content {
-        background-color: #fefefe; /* 모달 내용의 배경색 */
+        background-color: #FEFEFE; /* 모달 내용의 배경색 */
         margin: auto; /* 가운데 정렬 */
         padding: 20px;
         border: 1px solid #888;
@@ -106,7 +105,6 @@
       <button id="protectedButton">Protected Endpoint</button>
     </div>
     <button class="add-button" onclick="openModal()">+작성하기</button>
-
     <!-- 모달 -->
     <div id="myModal" class="modal">
       <div class="modal-content">
@@ -129,9 +127,7 @@
         <button onclick="closeModal()">취소</button>
       </div>
     </div>
-
     <!-- 여기에 나머지 페이지 내용을 추가하세요 -->
-
     <script>
       // JWT 가져오기
       const token = localStorage.getItem("access_token");
@@ -139,7 +135,6 @@
         // 로그인 페이지로 이동합니다.
         window.location.href = "/login";
       }
-
       function confirmLogout() {
         // 로그아웃을 진행하기 전에 사용자에게 확인 메시지를 띄웁니다.
         var confirmLogout = confirm("정말 로그아웃 하시겠습니까?");
@@ -148,7 +143,6 @@
           logout();
         }
       }
-
       function logout() {
         // 로그아웃을 처리하는 엔드포인트로 요청을 보냅니다.
         fetch("/logout", { method: "POST" })
@@ -170,34 +164,27 @@
             console.error("로그아웃 중 오류가 발생했습니다:", error);
           });
       }
-
       // 모달 열기
       function openModal() {
         document.getElementById("myModal").style.display = "block";
-        
       }
       // 모달 닫기
       function closeModal() {
         document.getElementById("myModal").style.display = "none";
       }
-
       // 아이템 저장
       function saveItem() {
         // URL과 내용을 가져옵니다.
         var url = document.getElementById("url").value;
         var content = document.getElementById("content").value;
-
         // 저장하는 로직을 여기에 추가하세요.
         console.log("URL:", url);
         console.log("내용:", content);
-
         // 모달을 닫습니다.
         closeModal();
       }
-
       function sendRequest() {
     var search = $("#search").val();
-
     $.ajax({
       url: "/write",
       type: "POST",
@@ -206,14 +193,12 @@
         console.log(response); // 요청에 대한 응답 데이터
         var searchResultList = document.getElementById("searchResultList");
         searchResultList.innerHTML = ''; // 이전 검색 결과 초기화
-
         for (var i = 0; i < response.data.length && i < 5; i++) {
           response.refresh;
           var item = response.data[i];
           var title = item.title;
           var address = item.address;
           var roadAddress = item.roadAddress;
-
           // 검색 결과를 리스트 아이템으로 구성하여 searchResultList에 추가
           var listItem = document.createElement("li");
           listItem.innerHTML = `<h2>${i}${title}</h2>
@@ -226,14 +211,11 @@
       },
     });
   }
-
       // $(document).ready(function() {
       //     $('#myModal').submit(function(event) {
       //         event.preventDefault(); // 기본 동작 방지
-
       //         // URL 데이터 가져오기
       //         var search = $('#search').val();
-
       //         // AJAX 요청 보내기
       //         $.ajax({
       //             type: 'POST',

@@ -110,12 +110,6 @@ def search_restaurant():
         print("Error Code:" + rescode)
 
    
-
-    
-  
-
-
-
 # 로그아웃
 @app.route('/logout', methods=['POST'])
 def logout():

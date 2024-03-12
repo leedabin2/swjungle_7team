@@ -105,6 +105,7 @@
         <span class="close" onclick="closeModal()">&times;</span>
         <label for="search">검색:</label>
         <input type="text" id="search" name="search">
+        <button onclick="sendRequest()">Send Request</button>
         <br>
         <label for="content">내용:</label>
         <textarea id="content" name="content"></textarea>
@@ -187,23 +188,48 @@
             var map = new naver.maps.Map('map', mapOptions);
         }
 
-        $(document).ready(function() {
-            $('#myModal').submit(function(event) {
-                event.preventDefault(); // 기본 동작 방지
 
-                // URL 데이터 가져오기
-                var search = $('#search').val();
+        function sendRequest() {
+            var url = 'https://openapi.naver.com/v1/search/local';
+            var clientId = 'qwYeDHfb22N5SlsoHEvL';
+            var clientSecret = '1IhM71SEUT';
+            var search = $('#search').val(); // 검색할 쿼리를 여기에 입력
+
+            $.ajax({
+                url: '/write',
+                type: 'GET',
+                data: {search_give : search},
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('Content-Type', 'plain/text');
+                    xhr.setRequestHeader('X-Naver-Client-Id', clientId);
+                    xhr.setRequestHeader('X-Naver-Client-Secret', clientSecret);
+                },
+                success: function(response) {
+                    console.log(response); // 요청에 대한 응답 데이터
+                },
+                error: function(xhr, status, error) {
+                    console.error('Request failed:', error);
+                }
+            });
+        }
+
+        // $(document).ready(function() {
+        //     $('#myModal').submit(function(event) {
+        //         event.preventDefault(); // 기본 동작 방지
+
+        //         // URL 데이터 가져오기
+        //         var search = $('#search').val();
                 
-                // AJAX 요청 보내기
-                $.ajax({
-                    type: 'POST',
-                    url: '/write',
-                    data: {search_give : search},
-                    success: function(response) {
-                    }
-                })
-            })
-        })
+        //         // AJAX 요청 보내기
+        //         $.ajax({
+        //             type: 'POST',
+        //             url: '/write',
+        //             data: {search_give : search},
+        //             success: function(response) {
+        //             }
+        //         })
+        //     })
+        // })
     </script>
 
 </body>

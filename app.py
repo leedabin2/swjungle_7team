@@ -130,8 +130,8 @@ def search_restaurant():
         # collection.insert_one(restaurant_doc,ordered=False)
         # res = list(db.restaurantlist.find({},{'_id':0}))
 
-        resp_data_to_json = json.dumps(restaurant_doc)
-        return jsonify({'resp_data' : resp_data_to_json})
+        # resp_data_to_json = json.dumps(restaurant_doc)
+        return jsonify(restaurant_doc)
     else:
         print("Error Code:" + rescode)
         return jsonify({'msg' : "에러가 발생하였습니다"})
@@ -144,21 +144,21 @@ def logout():
     return response, 200
   
 # db에서 검사 후 전
-@app.route('/search/click', methods=["POST"])
-def check_db_and_post_info():
-   username = get_jwt_identity()
-   print(username)
-   address_receive = request.form['address_give']
+# @app.route('/search/click', methods=["POST"])
+# def check_db_and_post_info():
+#    username = get_jwt_identity()
+#    print(username)
+#    address_receive = request.form['address_give']
    
-  # 유효한 데이터 찾기 (db에 없을시에 에러 반환)
-   find_address_data = db.restaurant.find_one({'address' : address_receive})
+#   # 유효한 데이터 찾기 (db에 없을시에 에러 반환)
+#    find_address_data = db.restaurant.find_one({'address' : address_receive})
    
-   if find_address_data is None:
-     return jsonify({'msg': "유효한 데이터가 없습니다."})
+#    if find_address_data is None:
+#      return jsonify({'msg': "유효한 데이터가 없습니다."})
    
-   # title/address/link,username json으로 보냄 찾는 address랑 똑같은 데이터만 (GET으로 처리해야하는가)
-   res = list(db.restaurantlist.find({},{'_id':0}),username)
-   return jsonify({'all_info': res}), 200 
+#    # title/address/link,username json으로 보냄 찾는 address랑 똑같은 데이터만 (GET으로 처리해야하는가)
+#    res = list(db.restaurantlist.find({},{'_id':0}),username)
+#    return jsonify({'all_info': res}), 200 
  
  # 등록 버튼 클릭시 db에 정보 저
 @app.route('/complete/write', methods=["POST"])
@@ -166,9 +166,9 @@ def register_info():
     title_receive = request.form['title_give']
     link_receive = request.form['link_give']
     address_receive = request.form['address_give']
-    username_receive = request.form['username_give']
+    username = get_jwt_identity()
     
-    register_doc = { 'title' : title_receive , 'link' : link_receive, 'address': address_receive, 'username' : username_receive}
+    register_doc = { 'title' : title_receive , 'link' : link_receive, 'address': address_receive, 'username' : username}
     
     db.registerlist.insert_one(register_doc)
     

@@ -78,6 +78,7 @@ def login():
     else:
         # GET 요청을 처리하기 위한 로직 추가
       return render_template('login.html') 
+  
 
 
 # 토큰의 유효성 검사

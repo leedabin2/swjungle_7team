@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main Page</title>
+    <!-- 네이버 지도 검색 API 스크립트 -->
+    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=qwYeDHfb22N5SlsoHEvL"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         /* 스타일을 추가하여 상단에 프로젝트 명과 로그인/로그아웃 버튼을 나타내세요. */
         .header {
@@ -97,19 +100,21 @@
     <button class="add-button" onclick="openModal()">+작성하기</button>
 
     <!-- 모달 -->
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <label for="url">URL:</label>
-            <input type="text" id="url" name="url">
-            <br>
-            <label for="content">내용:</label>
-            <textarea id="content" name="content"></textarea>
-            <br>
-            <button onclick="saveItem()">확인</button>
-            <button onclick="closeModal()">취소</button>
-        </div>
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <label for="search">검색:</label>
+        <input type="text" id="search" name="search">
+        <br>
+        <label for="content">내용:</label>
+        <textarea id="content" name="content"></textarea>
+        <br>
+        <!-- 네이버 지도 검색 API를 포함한 검색 창 -->
+        <div id="map" style="width:100%;height:400px;"></div>
+        <button onclick="saveItem()">확인</button>
+        <button onclick="closeModal()">취소</button>
     </div>
+</div>
 
     <!-- 여기에 나머지 페이지 내용을 추가하세요 -->
 
@@ -148,11 +153,6 @@
             });
         }
 
-        // 모달 열기
-        function openModal() {
-            document.getElementById("myModal").style.display = "block";
-        }
-
         // 모달 닫기
         function closeModal() {
             document.getElementById("myModal").style.display = "none";
@@ -171,6 +171,39 @@
             // 모달을 닫습니다.
             closeModal();
         }
+
+        function openModal() {
+        document.getElementById("myModal").style.display = "block";
+        // 모달이 열릴 때 네이버 지도 검색창을 초기화합니다.
+        initMap();
+        }
+
+        function initMap() {
+            var mapOptions = {
+                center: new naver.maps.LatLng(37.3595704, 127.105399),
+                zoom: 10
+            };
+
+            var map = new naver.maps.Map('map', mapOptions);
+        }
+
+        $(document).ready(function() {
+            $('#myModal').submit(function(event) {
+                event.preventDefault(); // 기본 동작 방지
+
+                // URL 데이터 가져오기
+                var search = $('#search').val();
+                
+                // AJAX 요청 보내기
+                $.ajax({
+                    type: 'POST',
+                    url: '/write',
+                    data: {search_give : search},
+                    success: function(response) {
+                    }
+                })
+            })
+        })
     </script>
 
 </body>

@@ -71,7 +71,15 @@ def login():
 client_id = 'qwYeDHfb22N5SlsoHEvL'
 client_secret = '1IhM71SEUT'
 
-@app.route('/v1/search/local', methods=['GET'])
+@app.route('/write', methods=['GET'])
+def write():
+    search_query = request.args.get('search_give')
+    # 여기에 네이버 API를 통해 검색하는 로직을 추가하세요.
+    # 예를 들어, 검색어를 로그에 출력하도록 하겠습니다.
+    print("Received search query:", search_query)
+    return jsonify({'result': 'success'})
+
+@app.route('/write', methods=['GET'])
 def search_local():
     # 요청 헤더에서 클라이언트 아이디와 클라이언트 시크릿을 가져옵니다.
     client_id = request.headers.get('X-Naver-Client-Id')

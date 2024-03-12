@@ -9,6 +9,7 @@ import os
 import sys
 import urllib.request
 import ssl
+import json
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -105,7 +106,22 @@ def search_restaurant():
         response_body = response.read()
         print(response_body.decode('utf-8'))
         resp_data = response_body.decode('utf-8')
-        return jsonify({'resp' : resp_data})
+        # db에 데이터 저장 (title, link, address)
+        resp_data = json.loads(response_body.decode('utf-8'))
+        
+        # db에 데이터 저장 (title, link, address)
+        for item in resp_data['items']:
+            title = item['title']
+            link = item['link']
+            address = item['address']
+
+        restaurant_doc = {'title' : title, 'link' : link, 'address' : address}
+        
+        db.restaurantlist.insert_one(restaurant_doc)
+        
+        res = list(db.restaurantlist.find({},{'_id':0}))
+        # 클라이언트한테 데이터 전송
+        return jsonify({'data':res})
     else:
         print("Error Code:" + rescode)
         return jsonify({'msg' : "에러가 발생하였습니다"})

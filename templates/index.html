@@ -112,19 +112,19 @@
       <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
         <label for="search">검색:</label>
-        <<<<<<< HEAD
-        <input type="text" id="search" name="search" />
-        <br />
-        =======
-        <input type="text" id="search" name="search" />
+        <input type="text" id="search" name="search" placeholder="정확한 상호명을 입력하세요">
         <button onclick="sendRequest()">Send Request</button>
+        <br>
+        <ul id="searchResultList"></ul> <!-- 결과를 리스트 형태로 표시할 요소 -->
         <br />
-        >>>>>>> 062c2edf683c57b33f28db3ab456f596a2f98710
-        <label for="content">내용:</label>
-        <textarea id="content" name="content"></textarea>
-        <br />
-        <!-- 네이버 지도 검색 API를 포함한 검색 창 -->
-        <div id="map" style="width: 100%; height: 400px"></div>
+        <form class="restaurant_information">
+          <label class="restaurant_name">가게명</label><br>
+          <label class="restaurant_address">주소</label><br>
+          <label class="restaurant_link">링크</label><br>
+          <label for="content">내용:</label>
+          <textarea id="content" name="content"></textarea>
+          <br />
+        </form>
         <button onclick="saveItem()">확인</button>
         <button onclick="closeModal()">취소</button>
       </div>
@@ -171,6 +171,11 @@
           });
       }
 
+      // 모달 열기
+      function openModal() {
+        document.getElementById("myModal").style.display = "block";
+        
+      }
       // 모달 닫기
       function closeModal() {
         document.getElementById("myModal").style.display = "none";
@@ -190,64 +195,37 @@
         closeModal();
       }
 
-      function openModal() {
-        document.getElementById("myModal").style.display = "block";
-        // 모달이 열릴 때 네이버 지도 검색창을 초기화합니다.
-        initMap();
-      }
-
-      function initMap() {
-        var mapOptions = {
-          center: new naver.maps.LatLng(37.3595704, 127.105399),
-          zoom: 10,
-        };
-
-        var map = new naver.maps.Map("map", mapOptions);
-      }
-
-      $(document).ready(function () {
-        $("#myModal").submit(function (event) {
-          event.preventDefault(); // 기본 동작 방지
-
-        function sendRequest() {
-            var url = 'https://openapi.naver.com/v1/search/local';
-            var clientId = 'qwYeDHfb22N5SlsoHEvL';
-            var clientSecret = '1IhM71SEUT';
-            var search = $('#search').val(); // 검색할 쿼리를 여기에 입력
-          
-            $.ajax({
-                url: '/write',
-                type: 'POST',
-                data: {search_give : search},
-                success: function(response) {
-                    console.log(response); // 요청에 대한 응답 데이터
-                },
-                error: function(xhr, status, error) {
-                    console.error('Request failed:', error);
-                    alert("서버오류발생",error)
-                }
-
-            });
-        });
-
       function sendRequest() {
-        var url = "https://openapi.naver.com/v1/search/local";
-        var clientId = "qwYeDHfb22N5SlsoHEvL";
-        var clientSecret = "1IhM71SEUT";
-        var search = $("#search").val(); // 검색할 쿼리를 여기에 입력
+    var search = $("#search").val();
 
-        $.ajax({
-          url: "/write",
-          type: "POST",
-          data: { search_give: search },
-          success: function (response) {
-            console.log(response); // 요청에 대한 응답 데이터
-          },
-          error: function (xhr, status, error) {
-            console.error("Request failed:", error);
-          },
-        });
-      }
+    $.ajax({
+      url: "/write",
+      type: "POST",
+      data: { search_give: search }, // 검색어를 서버로 전달
+      success: function (response) {
+        console.log(response); // 요청에 대한 응답 데이터
+        var searchResultList = document.getElementById("searchResultList");
+        searchResultList.innerHTML = ''; // 이전 검색 결과 초기화
+
+        for (var i = 0; i < response.data.length && i < 5; i++) {
+          response.refresh;
+          var item = response.data[i];
+          var title = item.title;
+          var address = item.address;
+          var roadAddress = item.roadAddress;
+
+          // 검색 결과를 리스트 아이템으로 구성하여 searchResultList에 추가
+          var listItem = document.createElement("li");
+          listItem.innerHTML = `<h2>${i}${title}</h2>
+                                <p><strong>Address:</strong> ${address}</p>`;
+          searchResultList.appendChild(listItem);
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error("Request failed:", error);
+      },
+    });
+  }
 
       // $(document).ready(function() {
       //     $('#myModal').submit(function(event) {

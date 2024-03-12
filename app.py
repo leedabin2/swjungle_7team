@@ -2,12 +2,17 @@ import datetime
 from flask import Flask, render_template, request, redirect, jsonify
 from settings import ca_path
 from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required
-from pymongo import MongoClient  
+from pymongo import MongoClient
+import xml.etree.ElementTree as elemTree
 import certifi,hashlib
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'oamaos123^&&*df@'
 jwt = JWTManager(app)
+
+tree = elemTree.parse('keys.xml')
+secretkey = tree.find('string[@name="secret_key"]').text
+
+app.config['SECRET_KEY'] = secretkey
 
 ca = certifi.where()
 client = MongoClient(ca_path, tlsCAFile=ca)
@@ -35,7 +40,6 @@ def register():
       db.users.insert_one(userinfo)
       return jsonify({'result':'success'})
     else:
-        # GET 요청을 처리하기 위한 로직 추가
       return render_template('signup.html') 
       
 # 로그인

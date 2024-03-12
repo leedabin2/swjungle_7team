@@ -5,6 +5,7 @@ from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity
 from pymongo import MongoClient
 import xml.etree.ElementTree as elemTree
 import certifi,hashlib
+import requests
 import os
 import sys
 import urllib.request
@@ -61,8 +62,8 @@ def register():
 @app.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
-      username_receive = request.form['username_input']
-      password_receive = request.form['password_input']
+      username_receive = request.json.get('username_input')
+      password_receive = request.json.get('password_input')
    
       password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
       
@@ -75,10 +76,17 @@ def login():
       expires_delta = datetime.timedelta(minutes=30)
       access_token = create_access_token(identity=username_receive, expires_delta=expires_delta)
       # 클라이언트에 200과 함께 토큰 전송
-      return jsonify({'result': 'success', 'token': access_token}), 200
+      return jsonify({'result': 'success', 'access_token': access_token}), 200
     else:
         # GET 요청을 처리하기 위한 로직 추가
       return render_template('login.html') 
+
+# 보호된 엔드포인트
+@app.route('/protected', methods=['GET'])
+@jwt_required()  # JWT 필요
+def protected():
+    current_user = get_jwt_identity()  # 현재 사용자 식별자
+    return jsonify(logged_in_as=current_user), 200
 
 # 토큰의 유효성 검사
 @app.route('/api/example', methods=['GET'])

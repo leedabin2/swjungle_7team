@@ -1,210 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Main Page</title>
     <!-- 네이버 지도 검색 API 스크립트 -->
-    <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=qwYeDHfb22N5SlsoHEvL"></script>
+    <script
+      type="text/javascript"
+      src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=qwYeDHfb22N5SlsoHEvL"
+    ></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        /* 스타일을 추가하여 상단에 프로젝트 명과 로그인/로그아웃 버튼을 나타내세요. */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            background-color: #f0f0f0;
-        }
-        .project-info {
-            display: flex;
-            align-items: center;
-        }
-        .project-name {
-            font-size: 20px;
-            font-weight: bold;
-        }
-        .welcome-container {
-            margin-left: auto;
-        }
-        .login-button,
-        .logout-button {
-            padding: 8px 16px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .add-button {
-            padding: 8px 16px;
-            background-color: #28a745;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 20px;
-            margin-top: 10px;
-        }
-        
-        /* 모달 스타일 */
-        .modal {
-            display: none; /* 모달 초기에는 숨김 */
-            position: fixed; /* 고정 위치 */
-            z-index: 1; /* 다른 요소 위에 표시 */
-            left: 0;
-            top: 0;
-            width: 100%; /* 전체 너비 */
-            height: 100%; /* 전체 높이 */
-            overflow: auto; /* 스크롤 가능하도록 설정 */
-            background-color: rgba(0,0,0,0.4); /* 반투명한 배경 */
-            padding-top: 100px; /* 화면 상단으로부터 100px 이상 공백 */
-        }
-        .modal-content {
-            background-color: #fefefe; /* 모달 내용의 배경색 */
-            margin: auto; /* 가운데 정렬 */
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%; /* 모달의 너비 */
-        }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
+      /* 스타일을 추가하여 상단에 프로젝트 명과 로그인/로그아웃 버튼을 나타내세요. */
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: #f0f0f0;
+      }
+      .project-info {
+        display: flex;
+        align-items: center;
+      }
+      .project-name {
+        font-size: 20px;
+        font-weight: bold;
+      }
+      .welcome-container {
+        margin-left: auto;
+      }
+      .login-button,
+      .logout-button {
+        padding: 8px 16px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .add-button {
+        padding: 8px 16px;
+        background-color: #28a745;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 20px;
+        margin-top: 10px;
+      }
+
+      /* 모달 스타일 */
+      .modal {
+        display: none; /* 모달 초기에는 숨김 */
+        position: fixed; /* 고정 위치 */
+        z-index: 1; /* 다른 요소 위에 표시 */
+        left: 0;
+        top: 0;
+        width: 100%; /* 전체 너비 */
+        height: 100%; /* 전체 높이 */
+        overflow: auto; /* 스크롤 가능하도록 설정 */
+        background-color: rgba(0, 0, 0, 0.4); /* 반투명한 배경 */
+        padding-top: 100px; /* 화면 상단으로부터 100px 이상 공백 */
+      }
+      .modal-content {
+        background-color: #fefefe; /* 모달 내용의 배경색 */
+        margin: auto; /* 가운데 정렬 */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; /* 모달의 너비 */
+      }
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="header">
-        <div class="project-info">
-            <div class="project-name">Your Project Name</div>
-            {% if username %}
-                <div class="welcome-container">
-                    <p class="welcome-message" id="welcomeMessage">Welcome, {{ username }}</p>
-                </div>
-            {% endif %}
-        </div>
+      <div class="project-info">
+        <div class="project-name">Your Project Name</div>
         {% if username %}
-            <button class="logout-button" onclick="confirmLogout()">Logout</button>
-        {% else %}
-            <button class="login-button" onclick="redirectToLoginPage()">Login</button>
+        <div class="welcome-container">
+          <p class="welcome-message" id="welcomeMessage">
+            Welcome, {{ username }}
+          </p>
+        </div>
         {% endif %}
+      </div>
+      {% if username %}
+      <button class="logout-button" onclick="confirmLogout()">Logout</button>
+      {% else %}
+      <button class="login-button" onclick="redirectToLoginPage()">
+        Login
+      </button>
+      {% endif %}
+      <button id="protectedButton">Protected Endpoint</button>
     </div>
     <button class="add-button" onclick="openModal()">+작성하기</button>
 
     <!-- 모달 -->
-<div id="myModal" class="modal">
-    <div class="modal-content">
+    <div id="myModal" class="modal">
+      <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
         <label for="search">검색:</label>
-        <input type="text" id="search" name="search">
-        <br>
+        <input type="text" id="search" name="search" />
+        <br />
         <label for="content">내용:</label>
         <textarea id="content" name="content"></textarea>
-        <br>
+        <br />
         <!-- 네이버 지도 검색 API를 포함한 검색 창 -->
-        <div id="map" style="width:100%;height:400px;"></div>
+        <div id="map" style="width: 100%; height: 400px"></div>
         <button onclick="saveItem()">확인</button>
         <button onclick="closeModal()">취소</button>
+      </div>
     </div>
-</div>
 
     <!-- 여기에 나머지 페이지 내용을 추가하세요 -->
 
     <script>
-        function redirectToLoginPage() {
-            // 로그인 페이지로 이동합니다.
-            window.location.href = "/login";
-        }
+      // JWT 가져오기
+      const token = localStorage.getItem("access_token");
+      function redirectToLoginPage() {
+        // 로그인 페이지로 이동합니다.
+        window.location.href = "/login";
+      }
 
-        function confirmLogout() {
-            // 로그아웃을 진행하기 전에 사용자에게 확인 메시지를 띄웁니다.
-            var confirmLogout = confirm("정말 로그아웃 하시겠습니까?");
-            if (confirmLogout) {
-                // 사용자가 확인을 클릭한 경우, 로그아웃을 진행합니다.
-                logout();
+      function confirmLogout() {
+        // 로그아웃을 진행하기 전에 사용자에게 확인 메시지를 띄웁니다.
+        var confirmLogout = confirm("정말 로그아웃 하시겠습니까?");
+        if (confirmLogout) {
+          // 사용자가 확인을 클릭한 경우, 로그아웃을 진행합니다.
+          logout();
+        }
+      }
+
+      function logout() {
+        // 로그아웃을 처리하는 엔드포인트로 요청을 보냅니다.
+        fetch("/logout", { method: "POST" })
+          .then((response) => {
+            if (response.ok) {
+              // 로그아웃이 성공하면 Welcome, {{ username }} 문구를 지우고 로그인 버튼으로 변경합니다.
+              document.getElementById("welcomeMessage").remove();
+              document.querySelector(".logout-button").innerText = "Login";
+              document.querySelector(".logout-button").className =
+                "login-button";
+              // 로그인 버튼의 onclick 이벤트를 다시 로그인 페이지로 이동하도록 변경합니다.
+              document.querySelector(".login-button").onclick =
+                redirectToLoginPage;
+            } else {
+              alert("로그아웃 중 오류가 발생했습니다.");
             }
-        }
+          })
+          .catch((error) => {
+            console.error("로그아웃 중 오류가 발생했습니다:", error);
+          });
+      }
 
-        function logout() {
-            // 로그아웃을 처리하는 엔드포인트로 요청을 보냅니다.
-            fetch("/logout", { method: "POST" })
-            .then(response => {
-                if (response.ok) {
-                    // 로그아웃이 성공하면 Welcome, {{ username }} 문구를 지우고 로그인 버튼으로 변경합니다.
-                    document.getElementById('welcomeMessage').remove();
-                    document.querySelector('.logout-button').innerText = 'Login';
-                    document.querySelector('.logout-button').className = 'login-button';
-                    // 로그인 버튼의 onclick 이벤트를 다시 로그인 페이지로 이동하도록 변경합니다.
-                    document.querySelector('.login-button').onclick = redirectToLoginPage;
-                } else {
-                    alert("로그아웃 중 오류가 발생했습니다.");
-                }
-            })
-            .catch(error => {
-                console.error("로그아웃 중 오류가 발생했습니다:", error);
-            });
-        }
+      // 모달 닫기
+      function closeModal() {
+        document.getElementById("myModal").style.display = "none";
+      }
 
-        // 모달 닫기
-        function closeModal() {
-            document.getElementById("myModal").style.display = "none";
-        }
+      // 아이템 저장
+      function saveItem() {
+        // URL과 내용을 가져옵니다.
+        var url = document.getElementById("url").value;
+        var content = document.getElementById("content").value;
 
-        // 아이템 저장
-        function saveItem() {
-            // URL과 내용을 가져옵니다.
-            var url = document.getElementById("url").value;
-            var content = document.getElementById("content").value;
+        // 저장하는 로직을 여기에 추가하세요.
+        console.log("URL:", url);
+        console.log("내용:", content);
 
-            // 저장하는 로직을 여기에 추가하세요.
-            console.log('URL:', url);
-            console.log('내용:', content);
+        // 모달을 닫습니다.
+        closeModal();
+      }
 
-            // 모달을 닫습니다.
-            closeModal();
-        }
-
-        function openModal() {
+      function openModal() {
         document.getElementById("myModal").style.display = "block";
         // 모달이 열릴 때 네이버 지도 검색창을 초기화합니다.
         initMap();
-        }
+      }
 
-        function initMap() {
-            var mapOptions = {
-                center: new naver.maps.LatLng(37.3595704, 127.105399),
-                zoom: 10
-            };
+      function initMap() {
+        var mapOptions = {
+          center: new naver.maps.LatLng(37.3595704, 127.105399),
+          zoom: 10,
+        };
 
-            var map = new naver.maps.Map('map', mapOptions);
-        }
+        var map = new naver.maps.Map("map", mapOptions);
+      }
 
-        $(document).ready(function() {
-            $('#myModal').submit(function(event) {
-                event.preventDefault(); // 기본 동작 방지
+      $(document).ready(function () {
+        $("#myModal").submit(function (event) {
+          event.preventDefault(); // 기본 동작 방지
 
-                // URL 데이터 가져오기
-                var search = $('#search').val();
-                
-                // AJAX 요청 보내기
-                $.ajax({
-                    type: 'POST',
-                    url: '/write',
-                    data: {search_give : search},
-                    success: function(response) {
-                    }
-                })
+          // URL 데이터 가져오기
+          var search = $("#search").val();
+
+          // AJAX 요청 보내기
+          $.ajax({
+            type: "POST",
+            url: "/write",
+            data: { search_give: search },
+            success: function (response) {},
+          });
+        });
+      });
+
+      document
+        .getElementById("protectedButton")
+        .addEventListener("click", function () {
+          const token = localStorage.getItem("access_token");
+          if (!token) {
+            alert("토큰 없다임마");
+            return;
+          }
+
+          fetch("/protected", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`, // JWT 헤더에 포함
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data);
+              alert(`토큰 있다 ㅎ : ${data}`);
             })
-        })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert(`알수 없는 오류 발생!`);
+            });
+        });
     </script>
-
-</body>
+  </body>
 </html>

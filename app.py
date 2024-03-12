@@ -5,9 +5,12 @@ from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity
 from pymongo import MongoClient
 import xml.etree.ElementTree as elemTree
 import certifi,hashlib
+import requests
+from flask_cors import CORS
 
 app = Flask(__name__)
 jwt = JWTManager(app)
+CORS(app)
 
 tree = elemTree.parse('keys.xml')
 secretkey = tree.find('string[@name="secret_key"]').text
@@ -64,6 +67,30 @@ def login():
     else:
         # GET 요청을 처리하기 위한 로직 추가
       return render_template('login.html') 
+    
+client_id = 'qwYeDHfb22N5SlsoHEvL'
+client_secret = '1IhM71SEUT'
+
+@app.route('/v1/search/local', methods=['GET'])
+def search_local():
+    # 요청 헤더에서 클라이언트 아이디와 클라이언트 시크릿을 가져옵니다.
+    client_id = request.headers.get('X-Naver-Client-Id')
+    client_secret = request.headers.get('X-Naver-Client-Secret')
+
+    # 요청 헤더에서 가져온 클라이언트 아이디와 클라이언트 시크릿을 이용하여 네이버 API에 요청을 보냅니다.
+    if client_id and client_secret:
+        api_url = 'https://openapi.naver.com/v1/search/local'
+        headers = {
+            'X-Naver-Client-Id': client_id,
+            'X-Naver-Client-Secret': client_secret
+        }
+        # 네이버 API에 요청을 보냅니다.
+        response = requests.get(api_url, headers=headers, params=request.args)
+
+        # 네이버 API로부터 받은 응답을 클라이언트에게 반환합니다.
+        return jsonify(response.json()), response.status_code
+    else:
+        return jsonify({'error': '클라이언트 아이디와 클라이언트 시크릿이 요청 헤더에 포함되어야 합니다.'}), 400
 
 # 토큰의 유효성 검사
 @app.route('/a', methods = ['GET'])

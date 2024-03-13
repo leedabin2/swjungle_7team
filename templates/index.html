@@ -1,8 +1,28 @@
-{% extends 'layout.html' %} {% block title %}정글 식도락{% endblock %} {%block
-content %}
-<section>
-  <h2>프로젝트 목표</h2>
-  <p>이 섹션은 프로젝트의 목표와 목표를 설명합니다.</p>
+{% extends 'layout.html' %} {% block title %}정글 식도락{% endblock %}{% block
+style %}
+<style>
+  /* Define animation keyframes */
+  @keyframes moveX {
+    0% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(100px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  .animate-x {
+    animation: moveX 2s ease-in-out infinite;
+  }
+</style>
+{% endblock %} {%block content %}
+<section class="bg-gray-200 p-8">
+  <div class="text-3xl font-bold text-blue-500 animate-x infinite">
+    카이스트 정글 식도락을 찾아주셔서 감사합니다!
+  </div>
 </section>
 <section>
   <div class="bg-gray-100">
@@ -22,11 +42,11 @@ content %}
       >
         <!-- 크게 만든 카드 리스트 -->
         <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
-          <h2 class="text-xl font-bold mb-4">제목 1</h2>
+          <h2 class="text-xl font-bold mb-4">가게명:</h2>
           <hr />
-          <p class="text-gray-700">내용 1</p>
-          <p class="text-gray-700">내용 2</p>
-          <p class="text-gray-700">내용 3</p>
+          <p class="text-gray-700">주소</p>
+          <p class="text-gray-700">작성자</p>
+          <p class="text-gray-700">따봉</p>
         </div>
         <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
           <h2 class="text-xl font-bold mb-4">제목 2</h2>

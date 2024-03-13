@@ -1,5 +1,5 @@
 <nav class="bg-blue-500 text-white px-6 py-4">
-  <a href="/" class="text-lg font-bold">도시락</a>
+  <a href="/" class="text-lg font-bold">식도락</a>
   <ul class="flex justify-end">
     <li class="mr-4">
       <a
@@ -49,7 +49,25 @@
   const loginButton = document.getElementById("login-nav");
 
   if (token) {
+<<<<<<< HEAD
     logoutButton.style.display = "inline-block"; // 로그아웃 버튼 표시
+=======
+    fetch("/protected", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`, // JWT 헤더에 포함
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // JWT가 localStorage에 있으면 로그인 상태로 간주
+        logoutButton.style.display = "inline-block"; // 로그아웃 버튼 표시
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        loginButton.style.display = "inline-block"; // 로그인 버튼 표시
+      });
+>>>>>>> e491bb075b26fa057d470a548f2e1e90c63e3eba
   } else {
     loginButton.style.display = "inline-block"; // 로그인 버튼 표시
   }

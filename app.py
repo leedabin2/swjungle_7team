@@ -172,19 +172,13 @@ def register_info():
   
 # 클라이언트 card등록되게 보내줌
 @app.route('/complete/write', methods=["GET"])
-def get_register_info():
-  all_register_list = list(db.registerlist.find({},{'_id':0}))
-  all_register_list_to_json = json.dumps(all_register_list)
-  return render_template("index.html",items=all_register_list_to_json)
+def get_recent_register_info():
+    recent_register = db.registerlist.find_one({}, {'_id': 0}, sort=[('_id', -1)])  # 최근 데이터 한 개 가져오기
+    return jsonify(recent_register)
+# def get_register_info():
+#   all_register_list = list(db.registerlist.find({},{'_id':0}))
+#   all_register_list_to_json = json.dumps(all_register_list)
+#   return render_template("index.html",items=all_register_list_to_json)
 
-<<<<<<< HEAD
-=======
-# @app.route('/detail', methods=['GET'])
-# def index() :
-#     post_list = Post.query.order_by(Post.id.desc()).all()
-
-#     return render_template('post.html', result=post_list)
-
->>>>>>> bb0aa821ef25e6960ea7a343c873591d3e4d60bf
 if __name__ == '__main__':
   app.run('0.0.0.0',port=5000,debug=True)

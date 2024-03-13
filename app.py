@@ -1,7 +1,7 @@
 import datetime
 from flask import Flask, render_template, request, redirect, jsonify
 from settings import ca_path, naver_client_id, naver_secret_key
-from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required, set_access_cookies
+from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required, set_access_cookies,unset_jwt_cookies
 from pymongo import MongoClient
 import xml.etree.ElementTree as elemTree
 import certifi,hashlib
@@ -84,29 +84,21 @@ def login():
     else:
         # GET 요청을 처리하기 위한 로직 추가
       return render_template('login.html')
-    
-
-# 보호된 엔드포인트
-@app.route('/protected', methods=['GET'])
-@jwt_required()
-def protected():
-    current_user = get_jwt_identity()
-    return jsonify(logged_in_as=current_user), 200
 
 
 # 토큰의 유효성 검사
-@app.route('/api/example', methods=['GET'])
-@jwt_required
-def protected():
-    username = get_jwt_identity()
-    # 토큰 만료시 에러 처리 추후 추가
-    return jsonify({'response': 'from {}'.format(username)}), 200
+# @app.route('/api/example', methods=['GET'])
+# # @jwt_required
+# def protected():
+#     username = get_jwt_identity()
+#     # 토큰 만료시 에러 처리 추후 추가
+#     return jsonify({'response': 'from {}'.format(username)}), 200
 
 # 토큰 만료시 클라이언트한테 401던지고, 클라이언트 로그인 리다이렉트처리
 
 # 네이버 검사 API
 @app.route('/write', methods=['POST'])
-# @jwt_required
+@jwt_required
 def search_restaurant():
     search_receive = request.form['search_give']
     encText = urllib.parse.quote(search_receive)
@@ -141,21 +133,6 @@ def search_restaurant():
         return jsonify({'msg' : "에러가 발생하였습니다"})
     
 
-# db에서 검사 후 전
-# @app.route('/search/click', methods=["POST"])
-# def check_db_and_post_info():
-#    username = get_jwt_identity()
-#    print(username)
-#    address_receive = request.form['address_give']
-#   # 유효한 데이터 찾기 (db에 없을시에 에러 반환)
-#    find_address_data = db.restaurant.find_one({'address' : address_receive})
-#    if find_address_data is None:
-#      return jsonify({'msg': "유효한 데이터가 없습니다."})
-#    # title/address/link,username json으로 보냄 찾는 address랑 똑같은 데이터만 (GET으로 처리해야하는가)
-#    res = list(db.restaurantlist.find({},{'_id':0}),username)
-#    return jsonify({'all_info': res}), 200
-    
-
  # 등록 버튼 클릭시 db에 정보 저장
 @app.route('/complete/write', methods=["POST"])
 @jwt_required()
@@ -172,16 +149,18 @@ def register_info():
   
 # 클라이언트 card등록되게 보내줌
 @app.route('/complete/write', methods=["GET"])
+@jwt_required()
 def get_register_info():
   all_register_list = list(db.registerlist.find({},{'_id':0}))
   all_register_list_to_json = json.dumps(all_register_list)
   return render_template("index.html",items=all_register_list_to_json)
 
-# @app.route('/detail', methods=['GET'])
-# def index() :
-#     post_list = Post.query.order_by(Post.id.desc()).all()
-
-#     return render_template('post.html', result=post_list)
+# 로그아웃
+@app.route('/logout', methods=['POST'])
+def logout():
+    resp = jsonify({'logout': True})
+    unset_jwt_cookies(resp)
+    return resp, 200
 
 if __name__ == '__main__':
   app.run('0.0.0.0',port=5000,debug=True)

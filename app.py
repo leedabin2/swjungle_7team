@@ -14,7 +14,7 @@ import json
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
-app = Flask(__name__)
+app = Flask(__name__,template_folder="templates")
 jwt = JWTManager(app)
 
 # 파싱
@@ -84,9 +84,9 @@ def login():
 
 # 보호된 엔드포인트
 @app.route('/protected', methods=['GET'])
-@jwt_required()  # JWT 필요
+@jwt_required() 
 def protected():
-    current_user = get_jwt_identity()  # 현재 사용자 식별자
+    current_user = get_jwt_identity() 
     return jsonify(logged_in_as=current_user), 200
 
 # 토큰의 유효성 검사
@@ -97,8 +97,9 @@ def protected():
     # 토큰 만료시 에러 처리 추후 추가
     return jsonify({'response': 'from {}'.format(username)}), 200
   
-  
-# 네이버 검색 API 
+# 토큰 만료시 클라이언트한테 401던지고, 클라이언트 로그인 리다이렉트처리
+ 
+# 네이버 검사 API 
 @app.route('/write', methods=['POST'])
 # @jwt_required
 def search_restaurant():
@@ -160,7 +161,7 @@ def logout():
 #    res = list(db.restaurantlist.find({},{'_id':0}),username)
 #    return jsonify({'all_info': res}), 200 
  
- # 등록 버튼 클릭시 db에 정보 저
+ # 등록 버튼 클릭시 db에 정보 저장
 @app.route('/complete/write', methods=["POST"])
 def register_info():
     title_receive = request.form['title_give']
@@ -174,5 +175,13 @@ def register_info():
     
     return jsonify({'result':'success'}), 200
   
+# 클라이언트 card등록되게 보내줌
+@app.route('/complete/write')
+def get_register_info():
+  all_register_list = list(db.registerlist.find({},{'_id':0}))
+  all_register_list_to_json = json.dumps(all_register_list) 
+  
+  return render_template("index.html",items=all_register_list_to_json)
+
 if __name__ == '__main__':  
   app.run('0.0.0.0',port=5000,debug=True)

@@ -80,19 +80,26 @@ def login():
     if request.method == 'POST':
       username_receive = request.json.get('username_input')
       password_receive = request.json.get('password_input')
+
+      if not username_receive:
+        return jsonify({'result':'error', 'message':'사용자 이름은 필수 입력 사항입니다.'})
+
+      if not password_receive:
+        return jsonify({'result':'error', 'message':'비밀번호 입력은 필수입니다.'})
+
       password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
       # 유효한 데이터 찾기 (db에 없을시에 클라이언트에 에러 반환)
       find_user_data = db.users.find_one({'username' : username_receive, 'password' : password_hash})
       if find_user_data is None:
-         return jsonify({'result':'error','msg': '인증 실패'}),401
+         return jsonify({'result':'error','message': '로그인 실패!'})
       # jwt 토큰 발급 (유효기간 30분)
       expires_delta = datetime.timedelta(minutes=30)
       access_token = create_access_token(identity=username_receive, expires_delta=expires_delta)
-      resp = jsonify({'login': True, 'token': access_token})
+      resp = jsonify({'result':'success','login': True, 'token': access_token})
   
       set_access_cookies(resp, access_token)
       # 클라이언트에 200과 함께 토큰 전송
-      return resp, 200
+      return resp
     else:
         # GET 요청을 처리하기 위한 로직 추가
       return render_template('login.html')

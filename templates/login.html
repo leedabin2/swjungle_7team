@@ -12,7 +12,6 @@ content %}
           type="text"
           id="username"
           name="username"
-          required
           class="mt-1 px-4 py-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
         />
       </div>
@@ -24,7 +23,6 @@ content %}
           type="password"
           id="password"
           name="password"
-          required
           class="mt-1 px-4 py-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
         />
       </div>
@@ -47,12 +45,10 @@ content %}
 <script>
   $(document).ready(function () {
     $("#loginForm").submit(function (event) {
-      event.preventDefault(); 
-
+      event.preventDefault();
 
       var username = $("#username").val();
       var password = $("#password").val();
-
 
       fetch("/login", {
         method: "POST",
@@ -64,18 +60,17 @@ content %}
           password_input: password,
         }),
       })
-    
-      .then(function (response) {
-        return response.json().then(function (data) {
-          if (response.ok) {
-            localStorage.setItem("token", data.token);
-            alert("로그인 성공!");
-            window.location.href = "/";
-          } else {
-            alert(`${error.message}`)
-          }
-        });
-      })
+        .then(function (response) {
+          return response.json().then(function (data) {
+            if (data.result == "success") {
+              localStorage.setItem("token", data.token);
+              alert("로그인 성공!");
+              window.location.href = "/";
+            } else {
+              alert(`${data.message}`);
+            }
+          });
+        })
         .catch(function (error) {
           alert("An error occurred during login.");
         });

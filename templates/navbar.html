@@ -1,40 +1,43 @@
-<nav class="bg-blue-500 text-white px-6 py-4">
-  <a href="/" class="text-lg font-bold">도시락</a>
-  <ul class="flex justify-end">
-    <li class="mr-4">
-      <a
-        id="login-nav"
-        href="/login"
-        style="display: none"
-        class="hover:text-gray-300 transition duration-300 ease-in-out"
-        onclick="redirectToLoginPage()"
-        >로그인</a
-      >
-    </li>
-    <li>
-      <a
-        id="logout-nav"
-        href="#"
-        style="display: none"
-        class="hover:text-gray-300 transition duration-300 ease-in-out"
-        onclick="confirmLogout()"
-        >로그아웃</a
-      >
-    </li>
-  </ul>
+<nav class="bg-blue-500 text-white shadow-lg fixed w-full top-0 z-10">
+  <div class="container mx-auto px-4">
+    <div class="flex items-center justify-between h-16">
+      <a href="/" class="text-lg font-bold">도시락</a>
+      <ul class="flex justify-end">
+        <li class="mr-4">
+          <a
+            id="login-nav"
+            href="/login"
+            style="display: none"
+            class="hover:text-gray-300 transition duration-300 ease-in-out"
+            onclick="redirectToLoginPage()"
+            >로그인</a
+          >
+        </li>
+        <li>
+          <a
+            id="logout-nav"
+            href="#"
+            style="display: none"
+            class="hover:text-gray-300 transition duration-300 ease-in-out"
+            onclick="confirmLogout()"
+            >로그아웃</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
 </nav>
 
 <script>
- 
   // 쿠키에서 특정 이름의 값을 가져오는 함수
   function getCookie(name) {
     let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
       for (let i = 0; i < cookies.length; i++) {
         const cookie = cookies[i].trim();
         // 이 쿠키의 이름이 요청한 이름과 일치하는지 확인
-        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        if (cookie.substring(0, name.length + 1) === name + "=") {
           cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
           break;
         }

@@ -69,7 +69,7 @@ style %}
           type="text"
           id="search"
           name="search"
-          placeholder="정확한 상호명을 입력하세요"
+          placeholder="현재 '전민동'지역만 입력해주세요!"
           class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4"
         />
         <button
@@ -264,6 +264,7 @@ style %}
     if (search.length === 0) {
       errorMessageSearch.innerText = "검색어는 필수 입력 사항입니다.";
       searchInput.focus(); // 커서를 다시 입력 필드로 이동시킴
+      return;
     }
     var search = $("#search").val();
     $.ajax({
@@ -271,18 +272,22 @@ style %}
       type: "POST",
       data: { search_give: search }, // 검색어를 서버로 전달
       success: function (response) {
-        const container = document.getElementById("searchResultList");
-        container.innerHTML = "";
-        var htmltitle = response.title;
-        var title = extractKoreanFromHTML(htmltitle);
-        var address = response.address;
-        var link = response.link;
-        container.innerHTML += `
+        if (response["result"] == "success") {
+          const container = document.getElementById("searchResultList");
+          container.innerHTML = "";
+          var htmltitle = response.title;
+          var title = extractKoreanFromHTML(htmltitle);
+          var address = response.address;
+          var link = response.link;
+          container.innerHTML += `
           <span id="title">가계명: ${title}</span>
           <br>
           <span id="address">도로명주소: ${address}</span>
           <br>
         `;
+        } else {
+          alert(response.message);
+        }
       },
     });
   }

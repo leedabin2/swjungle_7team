@@ -147,6 +147,10 @@ def food_info():
     if not content_receive:
        return jsonify({'result':'error', 'message':'내용 정보는 필수입니다.'})
     
+    isExisted = db.registerlist.find_one({'title': title_receive})
+
+    if isExisted:
+       return jsonify({'result':'error', 'message':'이미 존재하는 가게정보 입니다.'})
 
     username = get_jwt_identity()
 

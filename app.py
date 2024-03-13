@@ -1,5 +1,5 @@
 import datetime
-from flask import Flask, render_template, request, redirect, jsonify
+from flask import Flask, render_template, request, redirect, jsonify, session
 from settings import ca_path
 from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required
 from pymongo import MongoClient
@@ -18,10 +18,13 @@ app.config['SECRET_KEY'] = secretkey
 ca = certifi.where()
 client = MongoClient(ca_path, tlsCAFile=ca)
 db = client.dbsparta
-
+# 사용자 로그인 상태 확인을 위한 함수
+def is_user_authenticated():
+    return 'access_token' in session
 @app.route('/')
 def home():
-   return render_template('index.html')
+   print(is_user_authenticated())
+   return render_template('index.html', authenticated=is_user_authenticated())
 
 # 회원가입
 @app.route('/signup', methods=['GET','POST'])

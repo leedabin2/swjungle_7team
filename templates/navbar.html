@@ -1,12 +1,15 @@
-<nav class="bg-gray-400 dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
-  <div class="container mx-auto px-4">
-    <div class="flex items-center justify-between h-16">
-      <a class="text-lg font-bold">카정식</a>
-      <button id="login-nav" href="/login" style="display: none" class="hidden px-4 py-2 bg-transparent border border-white rounded hover:bg-white hover:text-blue-500 transition duration-300 ease-in-out" onclick="redirectToLoginPage()">로그인</button>
-      <button id="logout-nav" href="#" style="display: none" class="hidden px-4 py-2 bg-transparent border border-white rounded hover:bg-white hover:text-blue-500 transition duration-300 ease-in-out" onclick="confirmLogout()">로그아웃</button>
+
+
+<nav class="block w-full max-w-screen-xl px-4 py-2 mx-auto text-white bg-white border shadow-md rounded-xl border-white/80 bg-opacity-80 backdrop-blur-2xl backdrop-saturate-200 lg:px-8 lg:py-4" style="margin-top: -50px; /* 상단 여백 조정 */">
+  <div class="container flex items-center justify-between mx-auto text-blue-gray-900">
+    <a href="#" class="mr-4 block cursor-pointer py-1.5 font-sans text-base font-medium leading-relaxed text-black antialiased">카정식</a> <!-- 로고 색상 변경 -->
+    <div class="flex items-center">
+      <button id="login-nav" href="/login" onclick="redirectToLoginPage()" class="px-4 py-2 bg-transparent border border-black rounded hover:bg-black hover:text-white transition duration-300 ease-in-out text-black" style="display: none;">로그인</button> <!-- 로그인 버튼 항상 보이게 조정 -->
+      <button id="logout-nav" href="#" onclick="confirmLogout()" class="px-4 py-2 bg-transparent border border-black rounded hover:bg-black hover:text-white transition duration-300 ease-in-out text-black" style="display: none;">로그아웃</button>
     </div>
   </div>
 </nav>
+
 
 <script>
   var token = localStorage.getItem('token')

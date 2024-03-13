@@ -116,9 +116,9 @@
         <ul id="searchResultList"></ul> <!-- 결과를 리스트 형태로 표시할 요소 -->
         <br />
         <form class="restaurant_information">
-          <label class="restaurant_name">가게명</label><br>
-          <label class="restaurant_address">주소</label><br>
-          <label class="restaurant_link">링크</label><br>
+          <label class="restaurant_name" id="restaurantNameLabel">가게명:</label><br>
+          <label class="restaurant_address"id="restaurantaddressLabel">주소:</label><br>
+          <label class="restaurant_link"id="restaurantlinkLabel">링크:</label><br>
           <label for="content">내용:</label>
           <textarea id="content" name="content"></textarea>
           <br />
@@ -190,6 +190,21 @@
       type: "POST",
       data: { search_give: search }, // 검색어를 서버로 전달
       success: function (response) {
+<<<<<<< HEAD
+        var title = response.title;
+        var address = response.address;
+        var link = response.link;
+
+        $("#restaurantNameLabel").text("가게명: " + title); // 모달 내 "가게명" 옆에 가게명 설정
+        $("#restaurantaddressLabel").text("주소: " + address); // 모달 내 "주소" 옆에 가게명 설정
+        $("#restaurantlinkLabel").text("링크: " + link); // 모달 내 "링크" 옆에 가게명 설정
+
+          console.log(title)
+          console.log(address)
+          console.log(link)
+        
+      }
+=======
         console.log(response); // 요청에 대한 응답 데이터
         var searchResultList = document.getElementById("searchResultList");
         searchResultList.innerHTML = ''; // 이전 검색 결과 초기화
@@ -209,6 +224,7 @@
       error: function (xhr, status, error) {
         console.error("Request failed:", error);
       },
+>>>>>>> 3d393563bf883a38cfd0766d1a7a4cd83731a51a
     });
   }
       // $(document).ready(function() {

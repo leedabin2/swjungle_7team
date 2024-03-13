@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h2>Sign Up</h2>
+    <form id="signupForm">
+        <div>
+            <label for="newUsername">New Username:</label>
+            <input type="text" id="newUsername" name="newUsername" required>
+        </div>
+        <div>
+            <label for="newPassword">New Password:</label>
+            <input type="password" id="newPassword" name="newPassword" required>
+        </div>
+        <button type="submit">Sign Up</button>
+    </form>
+    <p>Already have an account? <a href="/login">Login</a></p>
+
+    <script>
+        $(document).ready(function() {
+            $('#signupForm').submit(function(event) {
+                event.preventDefault(); // 기본 동작 방지
+
+                // 폼 데이터 가져오기
+                var username = $('#newUsername').val();
+                var password = $('#newPassword').val();
+
+                // AJAX 요청 보내기
+                $.ajax({
+                    type: 'POST',
+                    url: '/signup',
+                    data: {username_give:username, password_give: password},
+                    success: function(response) {
+                        // 회원가입 성공 시 처리
+                        alert('회원가입이 완료되었습니다. 로그인 페이지로 이동합니다.');
+                        window.location.href = '/login';
+                    },
+                    error: function(xhr, status, error) {
+                        // 에러 발생 시 처리
+                        alert('회원가입 중 오류가 발생했습니다.');
+                        console.error(error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

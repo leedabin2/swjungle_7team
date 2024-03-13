@@ -67,6 +67,10 @@ content %}
       .then(function (response) {
         return response.json().then(function (data) {
           if (response.ok) {
+        
+             // navbar.html에서 로그인 버튼 숨기고 로그아웃 버튼 표시하기
+            document.getElementById("login-nav").style.display = "none";
+            document.getElementById("logout-nav").style.display = "block";
             alert("로그인 성공!");
             window.location.href = "/";
           } else {

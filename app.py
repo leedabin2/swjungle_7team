@@ -26,6 +26,10 @@ ca = certifi.where()
 client = MongoClient(ca_path, tlsCAFile=ca)
 db = client.dbsparta
 collection = db.restaurantlist
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3d393563bf883a38cfd0766d1a7a4cd83731a51a
 @app.route('/')
 def home():
    return render_template('index.html')
@@ -93,16 +97,30 @@ def search_restaurant():
         response_body = response.read()
         print(response_body.decode('utf-8'))
         resp_data = response_body.decode('utf-8')
+<<<<<<< HEAD
         resp_data = json.loads(response_body.decode('utf-8'))
+=======
+       
+        resp_data = json.loads(response_body.decode('utf-8'))
+        
+>>>>>>> 3d393563bf883a38cfd0766d1a7a4cd83731a51a
         for item in resp_data['items']:
             title = item['title']
             link = item['link']
             address = item['address']
         restaurant_doc = {'title' : title, 'link' : link, 'address' : address}
+<<<<<<< HEAD
+=======
+        
+>>>>>>> 3d393563bf883a38cfd0766d1a7a4cd83731a51a
         # db.restaurantlist.insert_one(restaurant_doc)
         # 중복 제거 후 삽입
         # collection.insert_one(restaurant_doc,ordered=False)
         # res = list(db.restaurantlist.find({},{'_id':0}))
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3d393563bf883a38cfd0766d1a7a4cd83731a51a
         # resp_data_to_json = json.dumps(restaurant_doc)
         return jsonify(restaurant_doc)
     else:
@@ -113,12 +131,17 @@ def search_restaurant():
 def logout():
     response = jsonify({'logout': True})
     return response, 200
+<<<<<<< HEAD
+=======
+  
+>>>>>>> 3d393563bf883a38cfd0766d1a7a4cd83731a51a
 # db에서 검사 후 전
 # @app.route('/search/click', methods=["POST"])
 # def check_db_and_post_info():
 #    username = get_jwt_identity()
 #    print(username)
 #    address_receive = request.form['address_give']
+<<<<<<< HEAD
 #   # 유효한 데이터 찾기 (db에 없을시에 에러 반환)
 #    find_address_data = db.restaurant.find_one({'address' : address_receive})
 #    if find_address_data is None:
@@ -126,6 +149,19 @@ def logout():
 #    # title/address/link,username json으로 보냄 찾는 address랑 똑같은 데이터만 (GET으로 처리해야하는가)
 #    res = list(db.restaurantlist.find({},{'_id':0}),username)
 #    return jsonify({'all_info': res}), 200
+=======
+   
+#   # 유효한 데이터 찾기 (db에 없을시에 에러 반환)
+#    find_address_data = db.restaurant.find_one({'address' : address_receive})
+   
+#    if find_address_data is None:
+#      return jsonify({'msg': "유효한 데이터가 없습니다."})
+   
+#    # title/address/link,username json으로 보냄 찾는 address랑 똑같은 데이터만 (GET으로 처리해야하는가)
+#    res = list(db.restaurantlist.find({},{'_id':0}),username)
+#    return jsonify({'all_info': res}), 200 
+ 
+>>>>>>> 3d393563bf883a38cfd0766d1a7a4cd83731a51a
  # 등록 버튼 클릭시 db에 정보 저
 @app.route('/complete/write', methods=["POST"])
 def register_info():
@@ -133,8 +169,19 @@ def register_info():
     link_receive = request.form['link_give']
     address_receive = request.form['address_give']
     username = get_jwt_identity()
+<<<<<<< HEAD
     register_doc = { 'title' : title_receive , 'link' : link_receive, 'address': address_receive, 'username' : username}
     db.registerlist.insert_one(register_doc)
     return jsonify({'result':'success'}), 200
 if __name__ == '__main__':
+=======
+    
+    register_doc = { 'title' : title_receive , 'link' : link_receive, 'address': address_receive, 'username' : username}
+    
+    db.registerlist.insert_one(register_doc)
+    
+    return jsonify({'result':'success'}), 200
+  
+if __name__ == '__main__':  
+>>>>>>> 3d393563bf883a38cfd0766d1a7a4cd83731a51a
   app.run('0.0.0.0',port=5000,debug=True)

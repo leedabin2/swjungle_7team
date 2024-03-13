@@ -183,7 +183,6 @@
         // 모달을 닫습니다.
         closeModal();
       }
-
       function sendRequest() {
     var search = $("#search").val();
     $.ajax({
@@ -191,6 +190,7 @@
       type: "POST",
       data: { search_give: search }, // 검색어를 서버로 전달
       success: function (response) {
+<<<<<<< HEAD
         var title = response.title;
         var address = response.address;
         var link = response.link;
@@ -204,9 +204,29 @@
           console.log(link)
         
       }
+=======
+        console.log(response); // 요청에 대한 응답 데이터
+        var searchResultList = document.getElementById("searchResultList");
+        searchResultList.innerHTML = ''; // 이전 검색 결과 초기화
+        for (var i = 0; i < response.data.length && i < 5; i++) {
+          response.refresh;
+          var item = response.data[i];
+          var title = item.title;
+          var address = item.address;
+          var roadAddress = item.roadAddress;
+          // 검색 결과를 리스트 아이템으로 구성하여 searchResultList에 추가
+          var listItem = document.createElement("li");
+          listItem.innerHTML = `<h2>${i}${title}</h2>
+                                <p><strong>Address:</strong> ${address}</p>`;
+          searchResultList.appendChild(listItem);
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error("Request failed:", error);
+      },
+>>>>>>> 3d393563bf883a38cfd0766d1a7a4cd83731a51a
     });
   }
-
       // $(document).ready(function() {
       //     $('#myModal').submit(function(event) {
       //         event.preventDefault(); // 기본 동작 방지

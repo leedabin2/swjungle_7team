@@ -12,7 +12,7 @@ import urllib.request
 import ssl
 import json
 ssl._create_default_https_context = ssl._create_unverified_context
-app = Flask(__name__)
+app = Flask(__name__,template_folder="templates")
 jwt = JWTManager(app)
 # 파싱
 tree = elemTree.parse('keys.xml')
@@ -26,10 +26,6 @@ ca = certifi.where()
 client = MongoClient(ca_path, tlsCAFile=ca)
 db = client.dbsparta
 collection = db.restaurantlist
-<<<<<<< HEAD
-=======
-
->>>>>>> 3d393563bf883a38cfd0766d1a7a4cd83731a51a
 @app.route('/')
 def home():
    return render_template('index.html')
@@ -70,9 +66,9 @@ def login():
       return render_template('login.html')
 # 보호된 엔드포인트
 @app.route('/protected', methods=['GET'])
-@jwt_required()  # JWT 필요
+@jwt_required()
 def protected():
-    current_user = get_jwt_identity()  # 현재 사용자 식별자
+    current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200
 # 토큰의 유효성 검사
 @app.route('/api/example', methods=['GET'])
@@ -81,7 +77,8 @@ def protected():
     username = get_jwt_identity()
     # 토큰 만료시 에러 처리 추후 추가
     return jsonify({'response': 'from {}'.format(username)}), 200
-# 네이버 검색 API
+# 토큰 만료시 클라이언트한테 401던지고, 클라이언트 로그인 리다이렉트처리
+# 네이버 검사 API
 @app.route('/write', methods=['POST'])
 # @jwt_required
 def search_restaurant():
@@ -97,30 +94,16 @@ def search_restaurant():
         response_body = response.read()
         print(response_body.decode('utf-8'))
         resp_data = response_body.decode('utf-8')
-<<<<<<< HEAD
         resp_data = json.loads(response_body.decode('utf-8'))
-=======
-       
-        resp_data = json.loads(response_body.decode('utf-8'))
-        
->>>>>>> 3d393563bf883a38cfd0766d1a7a4cd83731a51a
         for item in resp_data['items']:
             title = item['title']
             link = item['link']
             address = item['address']
         restaurant_doc = {'title' : title, 'link' : link, 'address' : address}
-<<<<<<< HEAD
-=======
-        
->>>>>>> 3d393563bf883a38cfd0766d1a7a4cd83731a51a
         # db.restaurantlist.insert_one(restaurant_doc)
         # 중복 제거 후 삽입
         # collection.insert_one(restaurant_doc,ordered=False)
         # res = list(db.restaurantlist.find({},{'_id':0}))
-<<<<<<< HEAD
-=======
-
->>>>>>> 3d393563bf883a38cfd0766d1a7a4cd83731a51a
         # resp_data_to_json = json.dumps(restaurant_doc)
         return jsonify(restaurant_doc)
     else:
@@ -131,17 +114,12 @@ def search_restaurant():
 def logout():
     response = jsonify({'logout': True})
     return response, 200
-<<<<<<< HEAD
-=======
-  
->>>>>>> 3d393563bf883a38cfd0766d1a7a4cd83731a51a
 # db에서 검사 후 전
 # @app.route('/search/click', methods=["POST"])
 # def check_db_and_post_info():
 #    username = get_jwt_identity()
 #    print(username)
 #    address_receive = request.form['address_give']
-<<<<<<< HEAD
 #   # 유효한 데이터 찾기 (db에 없을시에 에러 반환)
 #    find_address_data = db.restaurant.find_one({'address' : address_receive})
 #    if find_address_data is None:
@@ -149,39 +127,21 @@ def logout():
 #    # title/address/link,username json으로 보냄 찾는 address랑 똑같은 데이터만 (GET으로 처리해야하는가)
 #    res = list(db.restaurantlist.find({},{'_id':0}),username)
 #    return jsonify({'all_info': res}), 200
-=======
-   
-#   # 유효한 데이터 찾기 (db에 없을시에 에러 반환)
-#    find_address_data = db.restaurant.find_one({'address' : address_receive})
-   
-#    if find_address_data is None:
-#      return jsonify({'msg': "유효한 데이터가 없습니다."})
-   
-#    # title/address/link,username json으로 보냄 찾는 address랑 똑같은 데이터만 (GET으로 처리해야하는가)
-#    res = list(db.restaurantlist.find({},{'_id':0}),username)
-#    return jsonify({'all_info': res}), 200 
- 
->>>>>>> 3d393563bf883a38cfd0766d1a7a4cd83731a51a
- # 등록 버튼 클릭시 db에 정보 저
+ # 등록 버튼 클릭시 db에 정보 저장
 @app.route('/complete/write', methods=["POST"])
 def register_info():
     title_receive = request.form['title_give']
     link_receive = request.form['link_give']
     address_receive = request.form['address_give']
     username = get_jwt_identity()
-<<<<<<< HEAD
     register_doc = { 'title' : title_receive , 'link' : link_receive, 'address': address_receive, 'username' : username}
     db.registerlist.insert_one(register_doc)
     return jsonify({'result':'success'}), 200
+# 클라이언트 card등록되게 보내줌
+@app.route('/complete/write')
+def get_register_info():
+  all_register_list = list(db.registerlist.find({},{'_id':0}))
+  all_register_list_to_json = json.dumps(all_register_list)
+  return render_template("index.html",items=all_register_list_to_json)
 if __name__ == '__main__':
-=======
-    
-    register_doc = { 'title' : title_receive , 'link' : link_receive, 'address': address_receive, 'username' : username}
-    
-    db.registerlist.insert_one(register_doc)
-    
-    return jsonify({'result':'success'}), 200
-  
-if __name__ == '__main__':  
->>>>>>> 3d393563bf883a38cfd0766d1a7a4cd83731a51a
   app.run('0.0.0.0',port=5000,debug=True)

@@ -136,9 +136,15 @@ def register_info():
     address_receive = request.form['address_give']
     content_receive = request.form['content_give']
     username = get_jwt_identity()
-    
-    register_doc = { 'title' : title_receive , 'link' : link_receive, 'address': address_receive, 'username' : username , 'content' : content_receive}
 
+    count = db.registerlist.count_documents({})
+
+    key = 0
+    if count != 0:
+       key = db.registerlist.find_one(sort=[("key", -1)])["key"] + 1
+
+    register_doc = { 'key': key,  "number": 0, 'title' : title_receive , 'link' : link_receive, 'address': address_receive, 'username' : username, 'content': content_receive}
+    
     db.registerlist.insert_one(register_doc)
     return jsonify({"message":"success"}), 200
   
@@ -179,6 +185,14 @@ def logout():
     resp = jsonify({'logout': True}) # 응답 객체 생성
     unset_jwt_cookies(resp) # JWT 쿠키 제거
     return resp, 200
+
+# 추천수
+@app.route('/up', methods=["POST"])
+@jwt_required()
+def post_up_button():
+  key_receive = request.form['key']
+  db.registerlist.update_one({"key": int(key_receive)}, {"$inc": {"number": 1}})
+  return jsonify(), 200
 
 if __name__ == '__main__':
   app.run('0.0.0.0',port=5000,debug=True)

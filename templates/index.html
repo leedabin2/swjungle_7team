@@ -132,28 +132,31 @@ style %}
         let cards = response["cards"];
         console.log(cards);
         for (let i = 0; i < cards.length; i++) {
-          createCard(
+          createCard(cards[i]["key"],
             cards[i]["title"],
             cards[i]["address"],
             cards[i]["username"],
             cards[i]["content"],
-            cards[i]["link"]
+            cards[i]["link"],
+            cards[i]["number"]
           );
         }
       },
     });
   }
 
-  function createCard(title, address, username, content, link) {
+  function createCard(key,title, address, username, content, link,number) {
     let temp_html;
     temp_html = `
-      <div id=${username} class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
+      <div id=${key} class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
           <h2 class="text-xl font-bold mb-4">가게명: ${title}</h2>
           <hr />
           <p class="text-gray-700">주소: ${address}</p>
           <p class="text-gray-700">작성자: ${username}</p>
           <p class="text-gray-700">내용: ${content}</p>
-          <p class="text-gray-700">따봉</p>
+          <button onclick="recommend(${key})"
+          class="bg-green-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-green-600">추천</button>
+          <a id='count'>${number}</a>
         </div>`;
     $("#card-lists").append(temp_html);
   }
@@ -165,10 +168,7 @@ style %}
   // 아이템 저장
   function saveItem() {
     var title = $("#restaurantNameLabel").text().trim().replace("가게명: ", "");
-    var address = $("#restaurantaddressLabel")
-      .text()
-      .trim()
-      .replace("주소: ", "");
+    var address = $("#restaurantaddressLabel").text().trim().replace("주소: ", "");
     var link = $("#restaurantlinkLabel").text().trim().replace("링크: ", "");
     var content = $("#content").val().trim();
     // 저장하는 로직을 여기에 추가하세요.
@@ -202,17 +202,45 @@ style %}
       type: "POST",
       data: { search_give: search }, // 검색어를 서버로 전달
       success: function (response) {
-        var title = response.title;
+        var htmltitle = response.title;
+        var title = extractKoreanFromHTML(htmltitle);
         var address = response.address;
         var link = response.link;
 
         $("#restaurantNameLabel").text("가게명: " + title); // 모달 내 "가게명" 옆에 가게명 설정
         $("#restaurantaddressLabel").text("주소: " + address); // 모달 내 "주소" 옆에 가게명 설정
-        $("#restaurantlinkLabel").html(
-          "링크: <a href='" + link + "'>" + link + "</a>"
-        );
+        $("#restaurantlinkLabel").html("링크: <a href='" + link + "'>" + link + "</a>");
       },
     });
+  }
+
+  function extractKoreanFromHTML(html) {
+    // HTML 태그 제거
+    var textWithoutTags = html.replace(/<[^>]*>/g, '');
+    // 한글만 추출
+    var koreanOnly = textWithoutTags.match(/[가-힣]+/g);
+    // 배열을 문자열로 변환
+    if (koreanOnly) {
+        return koreanOnly.join('');
+    } else {
+        return '';
+    }
+  }
+
+  function recommend(key){
+    var upvote_count = 0;
+
+    upvote_count++;
+
+    $.ajax({
+      url: "/up",
+      type: "POST",
+      data: { "key" : key }, // 검색어를 서버로 전달
+      success: function (response) {
+        showcards();
+      }
+    });
+
   }
 </script>
 {% endblock %}

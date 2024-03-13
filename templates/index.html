@@ -59,12 +59,13 @@ style %}
     class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden"
   >
     <div class="bg-white rounded-lg p-8 max-w-md mx-auto">
+      <div id="errorMessageSearch" class="text-red-500"></div>
       <span
         class="absolute top-2 right-4 cursor-pointer text-2xl"
         onclick="closeModal()"
         >&times;</span
       >
-      <label for="search" class="block mb-2">검색:</label>
+      <label for="search" class="block mb-2">검색</label>
       <input
         type="text"
         id="search"
@@ -78,18 +79,18 @@ style %}
       >
         검색하기
       </button>
-      <ul id="searchResultList" class="mb-4"></ul>
-      <form>
-        <label id="restaurantNameLabel" class="block mb-2">가게명:</label>
-        <label id="restaurantaddressLabel" class="block mb-2">주소:</label>
-        <label id="restaurantlinkLabel" class="block mb-2">링크:</label>
-        <label for="content" class="block mb-2">내용:</label>
-        <textarea
-          id="content"
-          name="content"
-          class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4"
-        ></textarea>
-      </form>
+      <div id="searchResultList">
+        <span id="title">가계명:</span>
+        <br />
+        <span id="address">도로명주소:</span>
+        <br />
+      </div>
+      <textarea
+        id="content"
+        name="content"
+        class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4"
+        placeholder="내용을 입력하세요"
+      ></textarea>
       <button
         onclick="saveItem()"
         class="bg-green-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-green-600"
@@ -149,7 +150,6 @@ style %}
       data: {},
       success: function (response) {
         let cards = response["cards"];
-        console.log(cards);
         for (let i = 0; i < cards.length; i++) {
           createCard(
             cards[i]["key"],
@@ -174,32 +174,52 @@ style %}
           <p class="text-gray-700">주소: ${address}</p>
           <p class="text-gray-700">작성자: ${username}</p>
           <p class="text-gray-700">내용: ${content}</p>
-       
+
           <button onclick="recommend(${key})">
             <svg class="h-8 w-8 text-green-700" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
               <path stroke="none" d="M0 0h24v24H0z"/>
               <path d="M7 11v 8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3"/>
             </svg>
           </button>
-          
+
           <a id='count'>${number}</a>
         </div>`;
     $("#card-lists").append(temp_html);
   }
 
   function closeModal() {
+    document.getElementById("search").value = "";
+    document.getElementById("content").value = "";
+
+    const container = document.getElementById("searchResultList");
+    container.innerHTML = "";
+
+    container.innerHTML += `
+        <span id="title">가계명:</span>
+        <br>
+        <span id="address">도로명주소:</span>
+        <br>
+      `;
+
     document.getElementById("myModal").classList.add("hidden");
   }
 
   // 아이템 저장
   function saveItem() {
-    var title = $("#restaurantNameLabel").text().trim().replace("가게명: ", "");
-    var address = $("#restaurantaddressLabel")
-      .text()
-      .trim()
-      .replace("주소: ", "");
-    var link = $("#restaurantlinkLabel").text().trim().replace("링크: ", "");
+    errorMessageSearch.innerText = ""; // 오류 메시지를 삭제
+
+    var title = document.getElementById("title").textContent.split(":")[1];
+    var address = document.getElementById("address").textContent.split(":")[1];
+
+    if (title.trim().length === 0 || address.trim().length === 0) {
+      return alert("검색부터 해주세요");
+    }
+
     var content = $("#content").val().trim();
+
+    if (content.length === 0) {
+      return alert("내용을 작성하세요");
+    }
 
     $.ajax({
       url: "/complete/write",
@@ -207,39 +227,66 @@ style %}
       data: {
         title_give: title,
         address_give: address,
-        link_give: link,
+        link_give: "null",
         content_give: content,
       },
       success: function (response) {
         // 요청이 성공한 경우 처리할 내용
+        alert("맛집이 등록되었습니다.");
         showcards();
       },
       error: function (xhr, status, error) {
         // 요청이 실패한 경우 처리할 내용
+        alert("맛집이 등록 실패하였습니다..");
       },
     });
 
+    document.getElementById("search").value = "";
+    document.getElementById("content").value = "";
+
+    const container = document.getElementById("searchResultList");
+    container.innerHTML = "";
+
+    container.innerHTML += `
+        <span id="title">가계명:</span>
+        <br>
+        <span id="address">도로명주소:</span>
+        <br>
+      `;
     // 모달을 닫습니다.
     closeModal();
   }
 
   function sendRequest() {
+    errorMessageSearch.innerText = ""; // 오류 메시지를 삭제
+
+    var searchInput = document.getElementById("search");
+    var search = searchInput.value.trim();
+
+    if (search.length === 0) {
+      errorMessageSearch.innerText = "검색어는 필수 입력 사항입니다.";
+      searchInput.focus(); // 커서를 다시 입력 필드로 이동시킴
+    }
+
     var search = $("#search").val();
     $.ajax({
       url: "/write",
       type: "POST",
       data: { search_give: search }, // 검색어를 서버로 전달
       success: function (response) {
+        const container = document.getElementById("searchResultList");
+        container.innerHTML = "";
         var htmltitle = response.title;
         var title = extractKoreanFromHTML(htmltitle);
         var address = response.address;
         var link = response.link;
 
-        $("#restaurantNameLabel").text("가게명: " + title); // 모달 내 "가게명" 옆에 가게명 설정
-        $("#restaurantaddressLabel").text("주소: " + address); // 모달 내 "주소" 옆에 가게명 설정
-        $("#restaurantlinkLabel").html(
-          "링크: <a href='" + link + "'>" + link + "</a>"
-        );
+        container.innerHTML += `
+        <span id="title">가계명: ${title}</span>
+        <br>
+        <span id="address">도로명주소: ${address}</span>
+        <br>
+      `;
       },
     });
   }

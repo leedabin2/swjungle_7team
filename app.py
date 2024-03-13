@@ -163,14 +163,9 @@ def register_info():
     username = get_jwt_identity()
     register_doc = { 'title' : title_receive , 'link' : link_receive, 'address': address_receive, 'username' : username}
     db.registerlist.insert_one(register_doc)
-<<<<<<< HEAD
+
     return render_template("index.html", title=title_receive, link=link_receive, address=address_receive, username=username), 200
 
-=======
-    
-    return render_template("index.html", title=title_receive, link=link_receive, address=address_receive, username=username), 200
-  
->>>>>>> d780c666de6395e019413297b0fbb5cd420619c6
 # 클라이언트 card등록되게 보내줌
 @app.route('/complete/write', methods=["GET"])
 def get_register_info():

@@ -55,41 +55,48 @@ style %}
   </section>
   <!-- 모달 -->
   <div
-    id="myModal"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden"
-  >
-    <div class="bg-white rounded-lg p-8 max-w-md mx-auto">
-      <span
-        class="absolute top-2 right-4 cursor-pointer text-2xl"
-        onclick="closeModal()"
-        >&times;</span
-      >
-      <label for="search" class="block mb-2">검색:</label>
-      <input
+  id="myModal"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden"
+>
+  <div class="bg-white rounded-lg p-8 max-w-md mx-auto">
+    <span
+      class="absolute top-2 right-4 cursor-pointer text-2xl"
+      onclick="closeModal()"
+      >&times;</span
+    >
+    <div class="flex mb-4 items-center">
+  
+      <div class="flex items-center">
+        <input
         type="text"
         id="search"
         name="search"
         placeholder="정확한 상호명을 입력하세요"
-        class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4"
+        class="w-full px-4 py-2 border border-gray-300 rounded-lg"
       />
-      <button
-        onclick="sendRequest()"
-        class="bg-blue-500 text-white px-4 py-2 rounded-lg mb-4 hover:bg-blue-600"
-      >
-        검색하기
-      </button>
-      <ul id="searchResultList" class="mb-4"></ul>
-      <form>
-        <label id="restaurantNameLabel" class="block mb-2">가게명:</label>
-        <label id="restaurantaddressLabel" class="block mb-2">주소:</label>
-        <label id="restaurantlinkLabel" class="block mb-2">링크:</label>
-        <label for="content" class="block mb-2">내용:</label>
-        <textarea
-          id="content"
-          name="content"
-          class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4"
-        ></textarea>
-      </form>
+        <button type="submit" onclick="sendRequest()" class="p-2 border border-gray-300 rounded flex justify-center items-center">
+          <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </button>
+      </div>
+      
+      
+    
+    </div>
+    <ul id="searchResultList" class="mb-4"></ul>
+    <form>
+      <label id="restaurantNameLabel" class="block mb-2">가게명:</label>
+      <label id="restaurantaddressLabel" class="block mb-2">주소:</label>
+      <label id="restaurantlinkLabel" class="block mb-2">링크:</label>
+      <label for="content" class="block mb-2">내용:</label>
+      <textarea
+        id="content"
+        name="content"
+        class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4"
+      ></textarea>
+    </form>
+    <div class="flex justify-end">
       <button
         onclick="saveItem()"
         class="bg-green-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-green-600"
@@ -105,6 +112,7 @@ style %}
     </div>
   </div>
 </div>
+
 {% endblock %} {% block script %}
 <!-- 네이버 지도 검색 API 스크립트 -->
 <script

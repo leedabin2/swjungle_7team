@@ -138,12 +138,6 @@ def search_restaurant():
         print("Error Code:" + rescode)
         return jsonify({'msg' : "에러가 발생하였습니다"})
 
-   
-# 로그아웃
-@app.route('/logout', methods=['POST'])
-def logout():
-    response = jsonify({'logout': True})
-    return response, 200
   
 # db에서 검사 후 전
 # @app.route('/search/click', methods=["POST"])

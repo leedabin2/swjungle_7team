@@ -149,6 +149,7 @@ def get_recent_register_info():
 
 # 로그아웃
 @app.route('/logout', methods=['POST'])
+@jwt_required()
 def logout():
     resp = jsonify({'logout': True}) # 응답 객체 생성
     unset_jwt_cookies(resp) # JWT 쿠키 제거

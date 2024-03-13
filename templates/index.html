@@ -130,12 +130,31 @@ content %}
 
   // 아이템 저장
   function saveItem() {
-    // URL과 내용을 가져옵니다.
-    var url = document.getElementById("url").value;
-    var content = document.getElementById("content").value;
+    var title = $("#restaurantNameLabel").text().trim().replace("가게명: ", "");
+    var address = $("#restaurantaddressLabel")
+      .text()
+      .trim()
+      .replace("주소: ", "");
+    var link = $("#restaurantlinkLabel").text().trim().replace("링크: ", "");
+    var content = $("#content").val().trim();
     // 저장하는 로직을 여기에 추가하세요.
-    console.log("URL:", url);
-    console.log("내용:", content);
+
+    $.ajax({
+      url: "/complete/write",
+      type: "POST",
+      data: {
+        title_give: title,
+        address_give: address,
+        link_give: link,
+        content_give: content,
+      },
+      success: function (response) {
+        // 요청이 성공한 경우 처리할 내용
+      },
+      error: function (xhr, status, error) {
+        // 요청이 실패한 경우 처리할 내용
+      },
+    });
 
     // 모달을 닫습니다.
     closeModal();
@@ -150,9 +169,13 @@ content %}
         var title = response.title;
         var address = response.address;
         var link = response.link;
+
         $("#restaurantNameLabel").text("가게명: " + title); // 모달 내 "가게명" 옆에 가게명 설정
         $("#restaurantaddressLabel").text("주소: " + address); // 모달 내 "주소" 옆에 가게명 설정
-        $("#restaurantlinkLabel").text("링크: " + link); // 모달 내 "링크" 옆에 가게명 설정
+        $("#restaurantlinkLabel").html(
+          "링크: <a href='" + link + "'>" + link + "</a>"
+        ); // 모달 내 "링크" 옆에 가게명 설정
+
         console.log(title);
         console.log(address);
         console.log(link);

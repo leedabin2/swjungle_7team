@@ -134,15 +134,15 @@ def register_info():
     title_receive = request.form['title_give']
     link_receive = request.form['link_give']
     address_receive = request.form['address_give']
+    content_receive = request.form['content_give']
     username = get_jwt_identity()
     print(username)
-    register_doc = { 'title' : title_receive , 'link' : link_receive, 'address': address_receive, 'username' : username}
+    register_doc = { 'title' : title_receive , 'link' : link_receive, 'address': address_receive, 'username' : username, 'content': content_receive}
     db.registerlist.insert_one(register_doc)
     return jsonify({"message":"success"}), 200
   
 # 클라이언트 모든 것을  응답
 @app.route('/complete/write', methods=["GET"])
-@jwt_required()
 def get_recent_register_info():
     cards =  list(db.registerlist.find({}, {'_id': 0}))
     return jsonify({"cards": cards})

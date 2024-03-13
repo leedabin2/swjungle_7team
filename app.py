@@ -134,18 +134,19 @@ def register_info():
     title_receive = request.form['title_give']
     link_receive = request.form['link_give']
     address_receive = request.form['address_give']
+    content_receive = request.form['content_give']
     username = get_jwt_identity()
     
     register_doc = { 'title' : title_receive , 'link' : link_receive, 'address': address_receive, 'username' : username}
+
     db.registerlist.insert_one(register_doc)
-    return render_template("index.html", title=title_receive, link=link_receive, address=address_receive, username=username), 200
+    return jsonify({"message":"success"}), 200
   
-# 클라이언트 card등록되게 보내줌
+# 클라이언트 모든 것을  응답
 @app.route('/complete/write', methods=["GET"])
-@jwt_required()
 def get_recent_register_info():
-    recent_register = db.registerlist.find_one({}, {'_id': 0}, sort=[('_id', -1)])  # 최근 데이터 한 개 가져오기
-    return jsonify(recent_register)
+    cards =  list(db.registerlist.find({}, {'_id': 0}))
+    return jsonify({"cards": cards})
 
 # 클라이언트에서 받은 up버튼을 db에 저
 @app.route('/up', methods=["POST"])

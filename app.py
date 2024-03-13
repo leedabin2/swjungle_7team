@@ -46,10 +46,23 @@ def register():
       username_receive = request.form['username_give']
       password_receive = request.form['password_give']
 
+
+      if not username_receive:
+        return jsonify({'result':'error', 'message':'사용자 이름은 필수 입력 사항입니다.'})
+      elif len(username_receive) < 3 or len(username_receive) > 8:
+        return jsonify({'result':'error', 'message':'사용자 이름은 3자에서 8자 이하로 입력해야 합니다.'})
+
+      if not password_receive:
+        return jsonify({'result':'error', 'message':'비밀번호 입력은 필수입니다.'})
+      elif len(password_receive) < 8:
+        return jsonify({'result':'error', 'message':'비밀번호의 길이는 8자 이상이어야 합니다.'})
+      elif not any(char.isdigit() for char in password_receive) or not any(char.isalpha() for char in password_receive):
+        return jsonify({'result':'error', 'message':'비밀번호는 영문자와 숫자를 모두 포함해야 합니다.'})
+
       is_existed = db.users.find_one({'username': username_receive})
 
       if is_existed:
-        return jsonify({'result':'error','message':"중복된 이름입니다."})         
+        return jsonify({'result':'error','message':"중복된 이름입니다."})        
 
       # 비밀번화 암호화
       password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()

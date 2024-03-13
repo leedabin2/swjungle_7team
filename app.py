@@ -139,6 +139,15 @@ def food_info():
     title_receive = request.form['title_give']
     address_receive = request.form['address_give']
     content_receive = request.form['content_give']
+
+    if not title_receive:
+       return jsonify({'result':'error', 'message':'가게명 정보는 필수입니다.'})
+    if not address_receive:
+       return jsonify({'result':'error', 'message':'도로명주소 정보는 필수입니다.'})
+    if not content_receive:
+       return jsonify({'result':'error', 'message':'내용 정보는 필수입니다.'})
+    
+
     username = get_jwt_identity()
 
     count = db.registerlist.count_documents({})
@@ -150,7 +159,7 @@ def food_info():
     food_doc = { 'key': key,  "number": 0, 'title' : title_receive , 'address': address_receive, 'username' : username, 'content': content_receive}
     
     db.registerlist.insert_one(food_doc)
-    return jsonify({"message":"success"}), 200
+    return jsonify({"result":"success"}), 200
   
   
 # 클라이언트 모든 것을  응답

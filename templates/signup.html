@@ -3,6 +3,7 @@ content %}
 <div class="bg-gray-100 h-screen flex justify-center items-center">
   <div class="max-w-md w-full p-6 bg-white rounded-md shadow-md">
     <h2 class="text-2xl font-bold mb-4">가입하기</h2>
+    <div id="errorMessage" class="text-red-500"></div>
     <form id="signupForm">
       <div class="mb-4">
         <label for="newUsername" class="block text-sm font-medium text-gray-700"
@@ -12,8 +13,8 @@ content %}
           type="text"
           id="newUsername"
           name="newUsername"
-          required
           class="mt-1 px-4 py-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          onblur="newUsernameValidator()"
         />
       </div>
       <div class="mb-4">
@@ -24,8 +25,8 @@ content %}
           type="password"
           id="newPassword"
           name="newPassword"
-          required
           class="mt-1 px-4 py-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          onblur="newPasswordValidator()"
         />
       </div>
       <button
@@ -45,7 +46,7 @@ content %}
 <script>
   $(document).ready(function () {
     $("#signupForm").submit(function (event) {
-      event.preventDefault(); 
+      event.preventDefault();
       var username = $("#newUsername").val();
       var password = $("#newPassword").val();
       $.ajax({
@@ -59,6 +60,8 @@ content %}
           if (response["result"] == "success") {
             alert("회원가입완료!");
             window.location.href = "/login";
+          } else {
+            alert(`회원가입 실패! 원인:${response.message}`);
           }
         },
         error: function (xhr, status, error) {
@@ -68,5 +71,40 @@ content %}
       });
     });
   });
+
+  function newUsernameValidator() {
+    errorMessage.innerText = ""; // 오류 메시지를 삭제
+
+    var usernameInput = document.getElementById("newUsername");
+    var username = usernameInput.value.trim();
+
+    if (username.length === 0) {
+      errorMessage.innerText = "사용자 이름은 필수 입력 사항입니다.";
+      usernameInput.focus(); // 커서를 다시 입력 필드로 이동시킴
+    } else if (username.length < 3 || username.length > 8) {
+      document.getElementById("errorMessage").innerText =
+        "사용자 이름은 3자에서 8자 이하로 입력해야 합니다.";
+      usernameInput.focus(); // 커서를 다시 입력 필드로 이동시킴
+    }
+  }
+  function newPasswordValidator() {
+    errorMessage.innerText = ""; // 오류 메시지를 삭제
+
+    var passwordInput = document.getElementById("newPassword");
+    var password = passwordInput.value.trim();
+
+    if (password.length === 0) {
+      errorMessage.innerText = "비밀번호는 필수 입력 사항입니다.";
+      passwordInput.focus(); // 커서를 다시 입력 필드로 이동시킴
+    } else if (password.length < 8) {
+      document.getElementById("errorMessage").innerText =
+        "비밀번호의 길이는 8자 이상 입력해야 합니다.";
+      passwordInput.focus(); // 커서를 다시 입력 필드로 이동시킴
+    } else if (!password.match(/[a-zA-Z]/) || !password.match(/[0-9]/)) {
+      document.getElementById("errorMessage").innerText =
+        "비밀번호는 영문자와 숫자를 모두 포함해야 합니다.";
+      passwordInput.focus(); // 커서를 다시 입력 필드로 이동시킴
+    }
+  }
 </script>
 {% endblock %}

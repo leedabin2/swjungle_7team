@@ -5,9 +5,6 @@ from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity
 from pymongo import MongoClient
 import xml.etree.ElementTree as elemTree
 import certifi,hashlib
-import requests
-import os
-import sys
 import urllib.request
 import ssl
 import json
@@ -156,21 +153,18 @@ def search_restaurant():
 
  # 등록 버튼 클릭시 db에 정보 저장
 @app.route('/complete/write', methods=["POST"])
+@jwt_required()
 def register_info():
     title_receive = request.form['title_give']
     link_receive = request.form['link_give']
     address_receive = request.form['address_give']
     username = get_jwt_identity()
+    print(username)
     register_doc = { 'title' : title_receive , 'link' : link_receive, 'address': address_receive, 'username' : username}
     db.registerlist.insert_one(register_doc)
-<<<<<<< HEAD
+
     return render_template("index.html", title=title_receive, link=link_receive, address=address_receive, username=username), 200
 
-=======
-    
-    return render_template("index.html", title=title_receive, link=link_receive, address=address_receive, username=username), 200
-  
->>>>>>> d780c666de6395e019413297b0fbb5cd420619c6
 # 클라이언트 card등록되게 보내줌
 @app.route('/complete/write', methods=["GET"])
 def get_register_info():
@@ -178,6 +172,11 @@ def get_register_info():
   all_register_list_to_json = json.dumps(all_register_list)
   return render_template("index.html",items=all_register_list_to_json)
 
+# @app.route('/detail', methods=['GET'])
+# def index() :
+#     post_list = Post.query.order_by(Post.id.desc()).all()
+
+#     return render_template('post.html', result=post_list)
 
 if __name__ == '__main__':
   app.run('0.0.0.0',port=5000,debug=True)

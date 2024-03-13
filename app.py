@@ -1,13 +1,10 @@
 import datetime
 from flask import Flask, render_template, request, redirect, jsonify
 from settings import ca_path, naver_client_id, naver_secret_key
-from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required
+from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required, set_access_cookies
 from pymongo import MongoClient
 import xml.etree.ElementTree as elemTree
 import certifi,hashlib
-import requests
-import os
-import sys
 import urllib.request
 import ssl
 import json
@@ -17,6 +14,9 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 app = Flask(__name__,template_folder="templates")
 jwt = JWTManager(app)
+
+# 추후 수정
+app.config['JWT_COOKIE_CSRF_PROTECT'] = False
 
 # 파싱
 tree = elemTree.parse('keys.xml')
@@ -76,9 +76,11 @@ def login():
       # jwt 토큰 발급 (유효기간 30분)
       expires_delta = datetime.timedelta(minutes=30)
       access_token = create_access_token(identity=username_receive, expires_delta=expires_delta)
-
+      resp = jsonify({'login': True})
+      set_access_cookies(resp, access_token)
+      
       # 클라이언트에 200과 함께 토큰 전송
-      return jsonify({'result': 'success', 'access_token': access_token}), 200
+      return resp, 200
     else:
         # GET 요청을 처리하기 위한 로직 추가
       return render_template('login.html')
@@ -156,11 +158,13 @@ def search_restaurant():
 
  # 등록 버튼 클릭시 db에 정보 저장
 @app.route('/complete/write', methods=["POST"])
+@jwt_required()
 def register_info():
     title_receive = request.form['title_give']
     link_receive = request.form['link_give']
     address_receive = request.form['address_give']
     username = get_jwt_identity()
+    print(username)
     register_doc = { 'title' : title_receive , 'link' : link_receive, 'address': address_receive, 'username' : username}
     db.registerlist.insert_one(register_doc)
     
@@ -173,5 +177,14 @@ def get_register_info():
   all_register_list_to_json = json.dumps(all_register_list)
   return render_template("index.html",items=all_register_list_to_json)
 
+<<<<<<< HEAD
+=======
+# @app.route('/detail', methods=['GET'])
+# def index() :
+#     post_list = Post.query.order_by(Post.id.desc()).all()
+
+#     return render_template('post.html', result=post_list)
+
+>>>>>>> bb0aa821ef25e6960ea7a343c873591d3e4d60bf
 if __name__ == '__main__':
   app.run('0.0.0.0',port=5000,debug=True)

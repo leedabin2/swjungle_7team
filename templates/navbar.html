@@ -1,5 +1,5 @@
 <nav class="bg-blue-500 text-white px-6 py-4">
-  <a href="/" class="text-lg font-bold">도시락</a>
+  <a href="/" class="text-lg font-bold">식도락</a>
   <ul class="flex justify-end">
     <li class="mr-4">
       <a
@@ -25,14 +25,49 @@
 </nav>
 
 <script>
-  const token = localStorage.getItem("access_token");
+ 
+  // 쿠키에서 특정 이름의 값을 가져오는 함수
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        // 이 쿠키의 이름이 요청한 이름과 일치하는지 확인
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  const token = getCookie("access_token"); // 쿠키에서 토큰 읽어오기
 
   const logoutButton = document.getElementById("logout-nav");
   const loginButton = document.getElementById("login-nav");
 
   if (token) {
-    // JWT가 localStorage에 있으면 로그인 상태로 간주
+<<<<<<< HEAD
     logoutButton.style.display = "inline-block"; // 로그아웃 버튼 표시
+=======
+    fetch("/protected", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`, // JWT 헤더에 포함
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // JWT가 localStorage에 있으면 로그인 상태로 간주
+        logoutButton.style.display = "inline-block"; // 로그아웃 버튼 표시
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        loginButton.style.display = "inline-block"; // 로그인 버튼 표시
+      });
+>>>>>>> e491bb075b26fa057d470a548f2e1e90c63e3eba
   } else {
     loginButton.style.display = "inline-block"; // 로그인 버튼 표시
   }

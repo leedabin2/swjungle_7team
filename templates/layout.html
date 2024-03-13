@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Hahmlet:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Include Tailwind CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <title>{% block title %}{% endblock %}</title>
+  </head>
+  <body>
+    <!-- 네비게이션바 -->
+    {% include "navbar.html" %}
+    <!-- 기본 템플릿 안에 삽입될 내용 Start -->
+    {% block content %} {% endblock %}
+    <!-- 기본 템플릿 안에 삽입될 내용 End -->
+    <!-- 자바스크립트 Start -->
+    {% block script %} {% endblock %}
+    <!-- 자바스크립트 End -->
+    <!-- footer -->
+    {% include "footer.html" %}
+  </body>
+</html>

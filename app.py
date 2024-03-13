@@ -1,7 +1,7 @@
 import datetime
 from flask import Flask, render_template, request, redirect, jsonify
 from settings import ca_path, naver_client_id, naver_secret_key
-from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required
+from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required, set_access_cookies
 from pymongo import MongoClient
 import xml.etree.ElementTree as elemTree
 import certifi,hashlib
@@ -14,6 +14,9 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 app = Flask(__name__,template_folder="templates")
 jwt = JWTManager(app)
+
+# 추후 수정
+app.config['JWT_COOKIE_CSRF_PROTECT'] = False
 
 # 파싱
 tree = elemTree.parse('keys.xml')
@@ -73,9 +76,11 @@ def login():
       # jwt 토큰 발급 (유효기간 30분)
       expires_delta = datetime.timedelta(minutes=30)
       access_token = create_access_token(identity=username_receive, expires_delta=expires_delta)
-
+      resp = jsonify({'login': True})
+      set_access_cookies(resp, access_token)
+      
       # 클라이언트에 200과 함께 토큰 전송
-      return jsonify({'result': 'success', 'access_token': access_token}), 200
+      return resp, 200
     else:
         # GET 요청을 처리하기 위한 로직 추가
       return render_template('login.html')

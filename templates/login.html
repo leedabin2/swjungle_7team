@@ -64,19 +64,16 @@ content %}
           password_input: password,
         }),
       })
-        .then(function (response) {
-          return response.json();
-        })
-        .then(function (data) {
-          // Handle login success or failure
-          if (data.access_token) {
-            localStorage.setItem("access_token", data.access_token); // Store JWT
-            alert("Login successful!");
+      .then(function (response) {
+        return response.json().then(function (data) {
+          if (response.ok) {
+            alert("로그인 성공!");
             window.location.href = "/";
           } else {
-            alert(`Login failed! Cause: ${data.msg}`);
+            alert(`로그인 실패! 이유: ${data.msg}`);
           }
-        })
+        });
+      })
         .catch(function (error) {
           alert("An error occurred during login.");
         });

@@ -3,6 +3,7 @@ content %}
 <section>
   <h2>프로젝트 목표</h2>
   <p>이 섹션은 프로젝트의 목표와 목표를 설명합니다.</p>
+  <button class="add-button" onclick="openModal()">+작성하기</button>
 </section>
 <section>
   <div class="bg-gray-100">
@@ -51,6 +52,100 @@ content %}
     </div>
   </div>
 </section>
+<!-- 모달 -->
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <label for="search">검색:</label>
+    <input
+      type="text"
+      id="search"
+      name="search"
+      placeholder="정확한 상호명을 입력하세요"
+    />
+    <button onclick="sendRequest()">Send Request</button>
+    <br />
+    <ul id="searchResultList"></ul>
+    <!-- 결과를 리스트 형태로 표시할 요소 -->
+    <br />
+    <form class="restaurant_information">
+      <label class="restaurant_name" id="restaurantNameLabel">가게명:</label
+      ><br />
+      <label class="restaurant_address" id="restaurantaddressLabel">주소:</label
+      ><br />
+      <label class="restaurant_link" id="restaurantlinkLabel">링크:</label
+      ><br />
+      <label for="content">내용:</label>
+      <textarea id="content" name="content"></textarea>
+      <br />
+    </form>
+    <button onclick="saveItem()">확인</button>
+    <button onclick="closeModal()">취소</button>
+  </div>
+</div>
+<!-- 여기에 나머지 페이지 내용을 추가하세요 -->
 {% endblock %} {% block script %}
-<script></script>
+
+<!-- 네이버 지도 검색 API 스크립트 -->
+<script
+  type="text/javascript"
+  src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=qwYeDHfb22N5SlsoHEvL"
+></script>
+<script>
+  // 모달 열기
+  function openModal() {
+    document.getElementById("myModal").style.display = "block";
+  }
+  // 모달 닫기
+  function closeModal() {
+    document.getElementById("myModal").style.display = "none";
+  }
+  // 아이템 저장
+  function saveItem() {
+    // URL과 내용을 가져옵니다.
+    var url = document.getElementById("url").value;
+    var content = document.getElementById("content").value;
+    // 저장하는 로직을 여기에 추가하세요.
+    console.log("URL:", url);
+    console.log("내용:", content);
+    // 모달을 닫습니다.
+    closeModal();
+  }
+  function sendRequest() {
+    var search = $("#search").val();
+    $.ajax({
+      url: "/write",
+      type: "POST",
+      data: { search_give: search }, // 검색어를 서버로 전달
+      success: function (response) {
+        var title = response.title;
+        var address = response.address;
+        var link = response.link;
+
+        $("#restaurantNameLabel").text("가게명: " + title); // 모달 내 "가게명" 옆에 가게명 설정
+        $("#restaurantaddressLabel").text("주소: " + address); // 모달 내 "주소" 옆에 가게명 설정
+        $("#restaurantlinkLabel").text("링크: " + link); // 모달 내 "링크" 옆에 가게명 설정
+
+        console.log(title);
+        console.log(address);
+        console.log(link);
+      },
+    });
+  }
+  // $(document).ready(function() {
+  //     $('#myModal').submit(function(event) {
+  //         event.preventDefault(); // 기본 동작 방지
+  //         // URL 데이터 가져오기
+  //         var search = $('#search').val();
+  //         // AJAX 요청 보내기
+  //         $.ajax({
+  //             type: 'POST',
+  //             url: '/write',
+  //             data: {search_give : search},
+  //             success: function(response) {
+  //             }
+  //         })
+  //     })
+  // })
+</script>
 {% endblock %}

@@ -135,9 +135,8 @@ def search_restaurant():
  # 등록 버튼 클릭시 db에 정보 저장
 @app.route('/complete/write', methods=["POST"])
 @jwt_required()
-def register_info():
+def food_info():
     title_receive = request.form['title_give']
-    link_receive = request.form['link_give']
     address_receive = request.form['address_give']
     content_receive = request.form['content_give']
     username = get_jwt_identity()
@@ -148,16 +147,16 @@ def register_info():
     if count != 0:
        key = db.registerlist.find_one(sort=[("key", -1)])["key"] + 1
 
-    register_doc = { 'key': key,  "number": 0, 'title' : title_receive , 'link' : link_receive, 'address': address_receive, 'username' : username, 'content': content_receive}
+    food_doc = { 'key': key,  "number": 0, 'title' : title_receive , 'address': address_receive, 'username' : username, 'content': content_receive}
     
-    db.registerlist.insert_one(register_doc)
+    db.registerlist.insert_one(food_doc)
     return jsonify({"message":"success"}), 200
   
   
 # 클라이언트 모든 것을  응답
 @app.route('/complete/write', methods=["GET"])
 def get_recent_register_info():
-    cards =  list(db.registerlist.find({}, {'_id': 0}))
+    cards =  list(db.registerlist.find({}, {'_id': 0}).sort([('number', -1), ('key', -1)]))
     return jsonify({"cards": cards})
 
   

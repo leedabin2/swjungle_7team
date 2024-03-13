@@ -47,13 +47,13 @@ content %}
 <script>
   $(document).ready(function () {
     $("#loginForm").submit(function (event) {
-      event.preventDefault(); // Prevent default form submission
+      event.preventDefault(); 
 
-      // Get form data
+
       var username = $("#username").val();
       var password = $("#password").val();
 
-      // Send AJAX request
+
       fetch("/login", {
         method: "POST",
         headers: {

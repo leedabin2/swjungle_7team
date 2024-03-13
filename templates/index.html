@@ -1,7 +1,7 @@
 {% extends 'layout.html' %} {% block title %}정글 식도락{% endblock %}{% block
 style %}
 <style>
-  /* Define animation keyframes */
+
   @keyframes moveX {
     0% {
       transform: translateX(0);
@@ -122,8 +122,6 @@ style %}
   function showcards() {
     $("#card-lists").html("");
 
-    // $("#todo-val").val("");
-
     $.ajax({
       type: "GET",
       url: "/complete/write",
@@ -171,7 +169,6 @@ style %}
     var address = $("#restaurantaddressLabel").text().trim().replace("주소: ", "");
     var link = $("#restaurantlinkLabel").text().trim().replace("링크: ", "");
     var content = $("#content").val().trim();
-    // 저장하는 로직을 여기에 추가하세요.
 
     $.ajax({
       url: "/complete/write",

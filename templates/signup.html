@@ -45,7 +45,7 @@ content %}
 <script>
   $(document).ready(function () {
     $("#signupForm").submit(function (event) {
-      event.preventDefault(); // Prevent default form submission
+      event.preventDefault(); 
       var username = $("#newUsername").val();
       var password = $("#newPassword").val();
       $.ajax({

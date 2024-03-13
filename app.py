@@ -78,22 +78,6 @@ def login():
         # GET 요청을 처리하기 위한 로직 추가
       return render_template('login.html')
     
-# # 보호된 엔드포인트
-# @app.route('/protected', methods=['GET'])
-# @jwt_required()
-# def protected():
-#     current_user = get_jwt_identity()
-#     return jsonify(logged_in_as=current_user), 200
-  
-# # 토큰의 유효성 검사
-# @app.route('/api/example', methods=['GET'])
-# @jwt_required
-# def protected():
-#     username = get_jwt_identity()
-#     # 토큰 만료시 에러 처리 추후 추가
-#     return jsonify({'response': 'from {}'.format(username)}), 200
-  
-# 토큰 만료시 클라이언트한테 401던지고, 클라이언트 로그인 리다이렉트처리
 
 # 네이버 검사 API
 @app.route('/write', methods=['POST'])
@@ -117,11 +101,7 @@ def search_restaurant():
             link = item['link']
             address = item['address']
         restaurant_doc = {'title' : title, 'link' : link, 'address' : address}
-        # db.restaurantlist.insert_one(restaurant_doc)
-        # 중복 제거 후 삽입
-        # collection.insert_one(restaurant_doc,ordered=False)
-        # res = list(db.restaurantlist.find({},{'_id':0}))
-        # resp_data_to_json = json.dumps(restaurant_doc)
+     
         return jsonify(restaurant_doc)
     else:
         print("Error Code:" + rescode)

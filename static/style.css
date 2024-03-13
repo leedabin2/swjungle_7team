@@ -4,3 +4,7 @@
   font-weight: 18;
   font-style: normal;
 }
+/* 추가적인 CSS 스타일링 */
+body {
+  padding-top: 4rem; /* 네비게이션 바의 높이만큼 body의 상단 여백 추가 */
+}

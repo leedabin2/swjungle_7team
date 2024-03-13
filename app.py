@@ -70,6 +70,7 @@ def login():
       expires_delta = datetime.timedelta(minutes=30)
       access_token = create_access_token(identity=username_receive, expires_delta=expires_delta)
       resp = jsonify({'login': True})
+  
       set_access_cookies(resp, access_token)
       # 클라이언트에 200과 함께 토큰 전송
       return resp, 200
@@ -133,27 +134,40 @@ def register_info():
     title_receive = request.form['title_give']
     link_receive = request.form['link_give']
     address_receive = request.form['address_give']
+    content_receive = request.form['content_give']
     username = get_jwt_identity()
-    print(username)
-    register_doc = { 'title' : title_receive , 'link' : link_receive, 'address': address_receive, 'username' : username}
+
+    count = db.registerlist.count_documents({})
+
+    key = 0
+    if count != 0:
+       key = db.registerlist.find_one(sort=[("key", -1)])["key"] + 1
+
+    register_doc = { 'key': key,  "number": 0, 'title' : title_receive , 'link' : link_receive, 'address': address_receive, 'username' : username, 'content': content_receive}
     db.registerlist.insert_one(register_doc)
-    return render_template("index.html", title=title_receive, link=link_receive, address=address_receive, username=username), 200
+    return jsonify({"message":"success"}), 200
   
-# 클라이언트 card등록되게 보내줌
+# 클라이언트 모든 것을  응답
 @app.route('/complete/write', methods=["GET"])
-
-@jwt_required()
 def get_recent_register_info():
-    recent_register = db.registerlist.find_one({}, {'_id': 0})  
-    return jsonify(recent_register)
-
+    cards =  list(db.registerlist.find({}, {'_id': 0}))
+    return jsonify({"cards": cards})
 
 # 로그아웃
 @app.route('/logout', methods=['POST'])
+@jwt_required()
 def logout():
-    resp = jsonify({'logout': True})
-    unset_jwt_cookies(resp)
+    resp = jsonify({'logout': True}) # 응답 객체 생성
+    unset_jwt_cookies(resp) # JWT 쿠키 제거
     return resp, 200
+
+# 추천수
+@app.route('/up', methods=["POST"])
+@jwt_required()
+def post_up_button():
+  key_receive = request.form['key']
+  db.registerlist.update_one({"key": int(key_receive)}, {"$inc": {"number": 1}})
+  return jsonify(), 200
 
 if __name__ == '__main__':
   app.run('0.0.0.0',port=5000,debug=True)

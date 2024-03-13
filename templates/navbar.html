@@ -1,40 +1,43 @@
-<nav class="bg-blue-500 text-white px-6 py-4">
-  <a href="/" class="text-lg font-bold">도시락</a>
-  <ul class="flex justify-end">
-    <li class="mr-4">
-      <a
-        id="login-nav"
-        href="/login"
-        style="display: none"
-        class="hover:text-gray-300 transition duration-300 ease-in-out"
-        onclick="redirectToLoginPage()"
-        >로그인</a
-      >
-    </li>
-    <li>
-      <a
-        id="logout-nav"
-        href="#"
-        style="display: none"
-        class="hover:text-gray-300 transition duration-300 ease-in-out"
-        onclick="confirmLogout()"
-        >로그아웃</a
-      >
-    </li>
-  </ul>
+<nav class="bg-blue-500 text-white shadow-lg fixed w-full top-0 z-10">
+  <div class="container mx-auto px-4">
+    <div class="flex items-center justify-between h-16">
+      <a href="/" class="text-lg font-bold">도시락</a>
+      <ul class="flex justify-end">
+        <li class="mr-4">
+          <a
+            id="login-nav"
+            href="/login"
+            style="display: none"
+            class="hover:text-gray-300 transition duration-300 ease-in-out"
+            onclick="redirectToLoginPage()"
+            >로그인</a
+          >
+        </li>
+        <li>
+          <a
+            id="logout-nav"
+            href="#"
+            style="display: none"
+            class="hover:text-gray-300 transition duration-300 ease-in-out"
+            onclick="confirmLogout()"
+            >로그아웃</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
 </nav>
 
 <script>
- 
   // 쿠키에서 특정 이름의 값을 가져오는 함수
   function getCookie(name) {
     let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
       for (let i = 0; i < cookies.length; i++) {
         const cookie = cookies[i].trim();
         // 이 쿠키의 이름이 요청한 이름과 일치하는지 확인
-        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+        if (cookie.substring(0, name.length + 1) === name + "=") {
           cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
           break;
         }
@@ -49,21 +52,7 @@
   const loginButton = document.getElementById("login-nav");
 
   if (token) {
-    fetch("/protected", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`, // JWT 헤더에 포함
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // JWT가 localStorage에 있으면 로그인 상태로 간주
-        logoutButton.style.display = "inline-block"; // 로그아웃 버튼 표시
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        loginButton.style.display = "inline-block"; // 로그인 버튼 표시
-      });
+    logoutButton.style.display = "inline-block"; // 로그아웃 버튼 표시
   } else {
     loginButton.style.display = "inline-block"; // 로그인 버튼 표시
   }
@@ -76,22 +65,24 @@
   function confirmLogout() {
     // 로그아웃을 진행하기 전에 사용자에게 확인 메시지를 띄웁니다.
     var confirmLogout = confirm("정말 로그아웃 하시겠습니까?");
-    var logout;
+
     if (confirmLogout) {
       // 사용자가 확인을 클릭한 경우, 로그아웃을 진행합니다.
-      
+
       $.ajax({
-      url: "/logout",
-      type: "POST",
-      data: {
-        logout_give: logout,
-      },
-      success: function (response) {
-        // 요청이 성공한 경우 처리할 내용
-      }
-    });
-      localStorage.removeItem("access_token");
-      window.location.reload(); // 페이지 새로고침
+        url: "/logout",
+        type: "POST",
+        data: {
+          logout_give: true,
+        },
+        success: function (response) {
+          // 요청이 성공한 경우 처리할 내용
+          if (response.logout) {
+            window.location.reload();
+          }
+        },
+      });
+      //window.location.reload(); // 페이지 새로고침
     }
   }
 </script>

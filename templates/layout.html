@@ -25,16 +25,11 @@
     <title>{% block title %}{% endblock %}</title>
     {% block style %}{% endblock %}
   </head>
-  <body>
-    <!-- 네비게이션바 -->
+  <body class="bg-gray-100 flex flex-col">
     {% include "navbar.html" %}
-    <!-- 기본 템플릿 안에 삽입될 내용 Start -->
-    {% block content %} {% endblock %}
-    <!-- 기본 템플릿 안에 삽입될 내용 End -->
-    <!-- 자바스크립트 Start -->
-    {% block script %} {% endblock %}
-    <!-- 자바스크립트 End -->
-    <!-- footer -->
-    {% include "footer.html" %}
+    <div class="bg-gray-100 container mx-auto px-4 py-8 flex-grow">
+      {% block content %} {% endblock %}
+    </div>
+    {% block script %} {% endblock %} {% include "footer.html" %}
   </body>
 </html>

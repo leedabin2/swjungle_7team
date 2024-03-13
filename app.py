@@ -131,7 +131,7 @@ def register_info():
   
 # 클라이언트 모든 것을  응답
 @app.route('/complete/write', methods=["GET"])
-@jwt_required()
+#@jwt_required()
 def get_recent_register_info():
     cards =  list(db.registerlist.find({}, {'_id': 0}))
     return jsonify({"cards": cards})
@@ -147,7 +147,7 @@ def logout():
 
 # 추천수
 @app.route('/up', methods=["POST"])
-@jwt_required()
+#@jwt_required()
 def post_up_button_count():
   key_receive = request.form['key']
   db.registerlist.update_one({"key": int(key_receive)}, {"$inc": {"number": 1}})

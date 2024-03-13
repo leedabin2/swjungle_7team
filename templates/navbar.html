@@ -1,34 +1,27 @@
-<nav class="bg-blue-500 text-white shadow-lg fixed w-full top-0 z-10">
+<nav class="bg-blue-400 dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
   <div class="container mx-auto px-4">
     <div class="flex items-center justify-between h-16">
-      <a href="/" class="text-lg font-bold">도시락</a>
-      <ul class="flex justify-end">
-        <li class="mr-4">
-          <a id="login-nav" href="/login" style="display: none" class="hover:text-gray-300 transition duration-300 ease-in-out" onclick="redirectToLoginPage()">로그인</a>
-        </li>
-        <li>
-          <a id="logout-nav" href="#" style="display: none" class="hover:text-gray-300 transition duration-300 ease-in-out" onclick="confirmLogout()">로그아웃</a>
-        </li>
-      </ul>
+      <a class="text-lg font-bold">도시락</a>
+      <button id="login-nav" href="/login" style="display: none" class="hidden px-4 py-2 bg-transparent border border-white rounded hover:bg-white hover:text-blue-500 transition duration-300 ease-in-out" onclick="redirectToLoginPage()">로그인</button>
+      <button id="logout-nav" href="#" style="display: none" class="hidden px-4 py-2 bg-transparent border border-white rounded hover:bg-white hover:text-blue-500 transition duration-300 ease-in-out" onclick="confirmLogout()">로그아웃</button>
     </div>
   </div>
 </nav>
 
 <script>
-
-  var token = localStorage.getItem('token');
-
+  var token = localStorage.getItem('token')
+  
   var loginButton = document.getElementById('login-nav')
   var logoutButton = document.getElementById('logout-nav')
   
   if (token) {
     // 로그인 상태인 경우의 처리
-    logoutButton.style.display = 'inline-block' 
-    loginButton.style.display = 'none' 
+    logoutButton.style.display = 'inline-block'
+    loginButton.style.display = 'none'
   } else {
     // 로그인 상태가 아닌 경우의 처리
-    loginButton.style.display = 'inline-block' 
-    logoutButton.style.display = 'none' 
+    loginButton.style.display = 'inline-block'
+    logoutButton.style.display = 'none'
   }
   
   function redirectToLoginPage() {
@@ -52,7 +45,7 @@
         success: function (response) {
           // 요청이 성공한 경우 처리할 내용
           if (response.logout) {
-            localStorage.removeItem('token');
+            localStorage.removeItem('token')
             window.location.reload()
           }
         }

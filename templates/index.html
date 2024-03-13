@@ -1,157 +1,205 @@
 {% extends 'layout.html' %} {% block title %}정글 식도락{% endblock %} {%block
-    content %}
-    <section>
-      <h2>프로젝트 목표</h2>
-      <p>이 섹션은 프로젝트의 목표와 목표를 설명합니다.</p>
-      <button class="add-button" onclick="openModal()">+작성하기</button>
-    </section>
-    <section>
-      <div class="bg-gray-100">
-        <div class="max-w-6xl mx-auto mt-8">
-          <div
-            class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3"
-          >
-            <!-- 크게 만든 카드 리스트 -->
-            <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
-              <h2 class="text-xl font-bold mb-4">제목 1</h2>
-              <p class="text-gray-700">내용 1</p>
-              <p class="text-gray-700">내용 2</p>
-              <p class="text-gray-700">내용 3</p>
-            </div>
-            <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
-              <h2 class="text-xl font-bold mb-4">제목 2</h2>
-              <p class="text-gray-700">내용 2</p>
-            </div>
-            <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
-              <h2 class="text-xl font-bold mb-4">제목 3</h2>
-              <p class="text-gray-700">내용 3</p>
-            </div>
-            <!-- 필요한 만큼 카드를 추가하여 리스트 확장 가능 -->
-            <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
-              <h2 class="text-xl font-bold mb-4">제목 4</h2>
-              <p class="text-gray-700">내용 4</p>
-            </div>
-            <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
-              <h2 class="text-xl font-bold mb-4">제목 5</h2>
-              <p class="text-gray-700">내용 5</p>
-            </div>
-            <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
-              <h2 class="text-xl font-bold mb-4">제목 6</h2>
-              <p class="text-gray-700">내용 6</p>
-            </div>
-            <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
-              <h2 class="text-xl font-bold mb-4">제목 7</h2>
-              <p class="text-gray-700">내용 7</p>
-            </div>
-            <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
-              <h2 class="text-xl font-bold mb-4">제목 8</h2>
-              <p class="text-gray-700">내용 8</p>
-            </div>
-            <!-- 필요한 만큼 카드를 추가하여 리스트 확장 가능 -->
-          </div>
-        </div>
+content %}
+<section>
+  <h2>프로젝트 목표</h2>
+  <p>이 섹션은 프로젝트의 목표와 목표를 설명합니다.</p>
+</section>
+<section>
+  <div class="bg-gray-100">
+    <div class="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
+      <div class="mb-8">
+        <!-- 세로 간격을 주는 감싸는 컨테이너 -->
+        <button
+          onclick="openModal()"
+          class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4 md:mt-8"
+        >
+          맛집 등록하기
+        </button>
       </div>
-    </section>
-    <!-- 모달 -->
-    <div id="myModal" class="modal">
-      <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <label for="search">검색:</label>
-        <input
-          type="text"
-          id="search"
-          name="search"
-          placeholder="정확한 상호명을 입력하세요"
-        />
-        <button onclick="sendRequest()">Send Request</button>
-        <br />
-        <ul id="searchResultList"></ul>
-        <!-- 결과를 리스트 형태로 표시할 요소 -->
-        <br />
-        <form class="restaurant_information">
-          <label class="restaurant_name" id="restaurantNameLabel">가게명:</label
-          ><br />
-          <label class="restaurant_address" id="restaurantaddressLabel">주소:</label
-          ><br />
-          <label class="restaurant_link" id="restaurantlinkLabel">링크:</label
-          ><br />
-          <label for="content">내용:</label>
-          <textarea id="content" name="content"></textarea>
-          <br />
-        </form>
-        <button onclick="saveItem()">확인</button>
-        <button onclick="closeModal()">취소</button>
+
+      <div
+        class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3"
+      >
+        <!-- 크게 만든 카드 리스트 -->
+        <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
+          <h2 class="text-xl font-bold mb-4">제목 1</h2>
+          <hr />
+          <p class="text-gray-700">내용 1</p>
+          <p class="text-gray-700">내용 2</p>
+          <p class="text-gray-700">내용 3</p>
+        </div>
+        <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
+          <h2 class="text-xl font-bold mb-4">제목 2</h2>
+          <p class="text-gray-700">내용 2</p>
+        </div>
+        <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
+          <h2 class="text-xl font-bold mb-4">제목 3</h2>
+          <p class="text-gray-700">내용 3</p>
+        </div>
+        <!-- 필요한 만큼 카드를 추가하여 리스트 확장 가능 -->
+        <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
+          <h2 class="text-xl font-bold mb-4">제목 4</h2>
+          <p class="text-gray-700">내용 4</p>
+        </div>
+        <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
+          <h2 class="text-xl font-bold mb-4">제목 5</h2>
+          <p class="text-gray-700">내용 5</p>
+        </div>
+        <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
+          <h2 class="text-xl font-bold mb-4">제목 6</h2>
+          <p class="text-gray-700">내용 6</p>
+        </div>
+        <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
+          <h2 class="text-xl font-bold mb-4">제목 7</h2>
+          <p class="text-gray-700">내용 7</p>
+        </div>
+        <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
+          <h2 class="text-xl font-bold mb-4">제목 8</h2>
+          <p class="text-gray-700">내용 8</p>
+        </div>
+        <!-- 필요한 만큼 카드를 추가하여 리스트 확장 가능 -->
       </div>
     </div>
-    <!-- 여기에 나머지 페이지 내용을 추가하세요 -->
-    {% endblock %} {% block script %}
-    <!-- 네이버 지도 검색 API 스크립트 -->
-    <script
-      type="text/javascript"
-      src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=qwYeDHfb22N5SlsoHEvL"
-    ></script>
-    <script>
-      // 모달 열기
-      function openModal() {
-        document.getElementById("myModal").style.display = "block";
-      }
-      // 모달 닫기
-      function closeModal() {
-        document.getElementById("myModal").style.display = "none";
-      }
-      // 아이템 저장
-      function saveItem() {
-        // URL과 내용을 가져옵니다.
-        var title = $("#restaurantNameLabel").text().trim().replace("가게명: ", "");
-        var address = $("#restaurantaddressLabel").text().trim().replace("주소: ", "");
-        var link = $("#restaurantlinkLabel").text().trim().replace("링크: ", "");
-        var content = $("#content").val().trim();
-        // 저장하는 로직을 여기에 추가하세요.
+  </div>
+</section>
+<!-- 모달 -->
+<div
+  id="myModal"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden"
+>
+  <div class="bg-white rounded-lg p-8 max-w-md mx-auto">
+    <span
+      class="absolute top-2 right-4 cursor-pointer text-2xl"
+      onclick="closeModal()"
+      >&times;</span
+    >
+    <label for="search" class="block mb-2">검색:</label>
+    <input
+      type="text"
+      id="search"
+      name="search"
+      placeholder="정확한 상호명을 입력하세요"
+      class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4"
+    />
+    <button
+      onclick="sendRequest()"
+      class="bg-blue-500 text-white px-4 py-2 rounded-lg mb-4 hover:bg-blue-600"
+    >
+      검색하기
+    </button>
+    <ul id="searchResultList" class="mb-4"></ul>
+    <form>
+      <label id="restaurantNameLabel" class="block mb-2">가게명:</label>
+      <label id="restaurantaddressLabel" class="block mb-2">주소:</label>
+      <label id="restaurantlinkLabel" class="block mb-2">링크:</label>
+      <label for="content" class="block mb-2">내용:</label>
+      <textarea
+        id="content"
+        name="content"
+        class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4"
+      ></textarea>
+    </form>
+    <button
+      onclick="saveItem()"
+      class="bg-green-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-green-600"
+    >
+      확인
+    </button>
+    <button
+      onclick="closeModal()"
+      class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+    >
+      취소
+    </button>
+  </div>
+</div>
+{% endblock %} {% block script %}
+<!-- 네이버 지도 검색 API 스크립트 -->
+<script
+  type="text/javascript"
+  src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=qwYeDHfb22N5SlsoHEvL"
+></script>
+<script>
+  function openModal() {
+    document.getElementById("myModal").classList.remove("hidden");
+  }
 
-        $.ajax({
-        url: "/complete/write",
-        type: "POST",
-        data: {
-            title_give: title,
-            address_give: address,
-            link_give: link,
-            content_give: content
-        },
-        success: function(response) {
-            // 요청이 성공한 경우 처리할 내용
-        },
-        error: function(xhr, status, error) {
-            // 요청이 실패한 경우 처리할 내용
-        }
-        });
+  function closeModal() {
+    document.getElementById("myModal").classList.add("hidden");
+  }
 
-        
+  // 아이템 저장
+  function saveItem() {
+    var title = $("#restaurantNameLabel").text().trim().replace("가게명: ", "");
+    var address = $("#restaurantaddressLabel").text().trim().replace("주소: ", "");
+    var link = $("#restaurantlinkLabel").text().trim().replace("링크: ", "");
+    var content = $("#content").val().trim();
+    // 저장하는 로직을 여기에 추가하세요.
+    
+    $.ajax({
+      url: "/complete/write",
+      type: "POST",
+      data: {
+        title_give: title,
+        address_give: address,
+        link_give: link,
+        content_give: content,
+      },
+      success: function (response) {
+        // 요청이 성공한 경우 처리할 내용
+      },
+      error: function (xhr, status, error) {
+        // 요청이 실패한 경우 처리할 내용
+      },
+    });
 
-        // 모달을 닫습니다.
-        // closeModal();
-      }
+    $.ajax({
+      url: "/complete/write",
+      type: "GET",
+      data: {},
+      success: function (response) {
+        // 요청이 성공한 경우 처리할 내용
+        console.log(response)
+      },
+      error: function (xhr, status, error) {
+        // 요청이 실패한 경우 처리할 내용
+      },
+    });
 
-      function sendRequest() {
+    // 모달을 닫습니다.
+    closeModal();
+  }
 
+  function sendRequest() {
     var search = $("#search").val();
     $.ajax({
       url: "/write",
       type: "POST",
       data: { search_give: search }, // 검색어를 서버로 전달
       success: function (response) {
-        var title = response.title;
+        var htmltitle = response.title;
+        var title = extractKoreanFromHTML(htmltitle);
         var address = response.address;
         var link = response.link;
 
         $("#restaurantNameLabel").text("가게명: " + title); // 모달 내 "가게명" 옆에 가게명 설정
         $("#restaurantaddressLabel").text("주소: " + address); // 모달 내 "주소" 옆에 가게명 설정
-        $("#restaurantlinkLabel").html("링크: <a href='" + link + "'>" + link + "</a>") // 모달 내 "링크" 옆에 가게명 설정
-
-          console.log(title)
-          console.log(address)
-          console.log(link)
-      }
+        $("#restaurantlinkLabel").html("링크: <a href='" + link + "'>" + link + "</a>"); // 모달 내 "링크" 옆에 가게명 설정
+      },
     });
   }
-    </script>
-    {% endblock %}
+
+  function extractKoreanFromHTML(html) {
+    // HTML 태그 제거
+    var textWithoutTags = html.replace(/<[^>]*>/g, '');
+    // 한글만 추출
+    var koreanOnly = textWithoutTags.match(/[가-힣]+/g);
+    // 배열을 문자열로 변환
+    if (koreanOnly) {
+        return koreanOnly.join('');
+    } else {
+        return '';
+    }
+}
+</script>
+{% endblock %}

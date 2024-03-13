@@ -41,42 +41,8 @@ style %}
         class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3"
       >
         <!-- 크게 만든 카드 리스트 -->
-        <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
-          <h2 class="text-xl font-bold mb-4">가게명:</h2>
-          <hr />
-          <p class="text-gray-700">주소</p>
-          <p class="text-gray-700">작성자</p>
-          <p class="text-gray-700">따봉</p>
-        </div>
-        <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
-          <h2 class="text-xl font-bold mb-4">제목 2</h2>
-          <p class="text-gray-700">내용 2</p>
-        </div>
-        <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
-          <h2 class="text-xl font-bold mb-4">제목 3</h2>
-          <p class="text-gray-700">내용 3</p>
-        </div>
-        <!-- 필요한 만큼 카드를 추가하여 리스트 확장 가능 -->
-        <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
-          <h2 class="text-xl font-bold mb-4">제목 4</h2>
-          <p class="text-gray-700">내용 4</p>
-        </div>
-        <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
-          <h2 class="text-xl font-bold mb-4">제목 5</h2>
-          <p class="text-gray-700">내용 5</p>
-        </div>
-        <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
-          <h2 class="text-xl font-bold mb-4">제목 6</h2>
-          <p class="text-gray-700">내용 6</p>
-        </div>
-        <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
-          <h2 class="text-xl font-bold mb-4">제목 7</h2>
-          <p class="text-gray-700">내용 7</p>
-        </div>
-        <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
-          <h2 class="text-xl font-bold mb-4">제목 8</h2>
-          <p class="text-gray-700">내용 8</p>
-        </div>
+        <div id="cardContainer" class="grid grid-cols-3 gap-4"></div>
+        
         <!-- 필요한 만큼 카드를 추가하여 리스트 확장 가능 -->
       </div>
     </div>
@@ -151,14 +117,11 @@ style %}
   // 아이템 저장
   function saveItem() {
     var title = $("#restaurantNameLabel").text().trim().replace("가게명: ", "");
-    var address = $("#restaurantaddressLabel")
-      .text()
-      .trim()
-      .replace("주소: ", "");
+    var address = $("#restaurantaddressLabel").text().trim().replace("주소: ", "");
     var link = $("#restaurantlinkLabel").text().trim().replace("링크: ", "");
     var content = $("#content").val().trim();
     // 저장하는 로직을 여기에 추가하세요.
-
+    
     $.ajax({
       url: "/complete/write",
       type: "POST",
@@ -176,9 +139,62 @@ style %}
       },
     });
 
+    $.ajax({
+      url: "/complete/write",
+      type: "GET",
+      data: {},
+      success: function (response) {
+        // 요청이 성공한 경우 처리할 내용
+        // 데이터가 배열인지 확인
+        if (Array.isArray(response)) {
+            // 배열인 경우 forEach를 사용하여 각각의 요소에 접근
+            response.forEach(function(item) {
+                // 각각의 아이템으로 카드를 생성하고 출력하는 코드
+                var cardHTML = `
+                    <div class="max-w-sm rounded overflow-hidden shadow-lg">
+                        <div class="px-6 py-4">
+                            <p class="font-bold text-xl mb-2">${item.title}</p>
+                            <p class="text-gray-700 text-base">${item.address}</p>
+
+                            <a href="${item.link}" class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">#링크</a>
+                        </div>
+                    </div>
+                `;
+                
+                // 카드를 출력할 요소에 추가
+                $("#cardContainer").append(cardHTML);
+            });
+        } else if (typeof response === 'object') {
+            // 객체인 경우 처리
+            for (var key in response) {
+                // 각 속성에 대한 처리를 여기서 수행
+                var value = response[key];
+                // 실제로 원하는 처리: 객체의 속성을 사용하여 카드를 생성하고 출력
+                var cardHTML = `
+                    <div class="max-w-sm rounded overflow-hidden shadow-lg">
+                        <div class="px-6 py-4">
+                            <div class="font-bold text-xl mb-2">${key}</div>
+                            <p class="text-gray-700 text-base">${value}</p>
+                        </div>
+                    </div>
+                `;
+                
+                // 카드를 출력할 요소에 추가
+                $("#cardContainer").append(cardHTML);
+            }
+        } else {
+            console.error("Response is neither an array nor an object.");
+        }
+    },
+    error: function (xhr, status, error) {
+        console.error(error);
+    }
+});
+
     // 모달을 닫습니다.
     closeModal();
   }
+
   function sendRequest() {
     var search = $("#search").val();
     $.ajax({
@@ -186,21 +202,29 @@ style %}
       type: "POST",
       data: { search_give: search }, // 검색어를 서버로 전달
       success: function (response) {
-        var title = response.title;
+        var htmltitle = response.title;
+        var title = extractKoreanFromHTML(htmltitle);
         var address = response.address;
         var link = response.link;
 
         $("#restaurantNameLabel").text("가게명: " + title); // 모달 내 "가게명" 옆에 가게명 설정
         $("#restaurantaddressLabel").text("주소: " + address); // 모달 내 "주소" 옆에 가게명 설정
-        $("#restaurantlinkLabel").html(
-          "링크: <a href='" + link + "'>" + link + "</a>"
-        ); // 모달 내 "링크" 옆에 가게명 설정
-
-        console.log(title);
-        console.log(address);
-        console.log(link);
+        $("#restaurantlinkLabel").html("링크: <a href='" + link + "'>" + link + "</a>"); // 모달 내 "링크" 옆에 가게명 설정
       },
     });
   }
+
+  function extractKoreanFromHTML(html) {
+    // HTML 태그 제거
+    var textWithoutTags = html.replace(/<[^>]*>/g, '');
+    // 한글만 추출
+    var koreanOnly = textWithoutTags.match(/[가-힣]+/g);
+    // 배열을 문자열로 변환
+    if (koreanOnly) {
+        return koreanOnly.join('');
+    } else {
+        return '';
+    }
+}
 </script>
 {% endblock %}

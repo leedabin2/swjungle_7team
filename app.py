@@ -141,10 +141,10 @@ def register_info():
   
 # 클라이언트 card등록되게 보내줌
 @app.route('/complete/write', methods=["GET"])
-<<<<<<< HEAD
+
 @jwt_required()
 def get_recent_register_info():
-    recent_register = db.registerlist.find_one({}, {'_id': 0}, sort=[('_id', -1)])  # 최근 데이터 한 개 가져오기
+    recent_register = db.registerlist.find_one({}, {'_id': 0})  
     return jsonify(recent_register)
 
 
@@ -154,15 +154,6 @@ def logout():
     resp = jsonify({'logout': True})
     unset_jwt_cookies(resp)
     return resp, 200
-=======
-def get_recent_register_info():
-    recent_register = db.registerlist.find_one({}, {'_id': 0}, sort=[('_id', -1)])  # 최근 데이터 한 개 가져오기
-    return jsonify(recent_register)
-# def get_register_info():
-#   all_register_list = list(db.registerlist.find({},{'_id':0}))
-#   all_register_list_to_json = json.dumps(all_register_list)
-#   return render_template("index.html",items=all_register_list_to_json)
->>>>>>> 86f746bb0bff744fe173513d345e6f745a79a2c2
 
 if __name__ == '__main__':
   app.run('0.0.0.0',port=5000,debug=True)

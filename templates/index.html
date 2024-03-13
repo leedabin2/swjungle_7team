@@ -1,230 +1,222 @@
-{% extends 'layout.html' %} {% block title %}정글 식도락{% endblock %}{% block
-style %}
-<style>
-  /* Define animation keyframes */
-  @keyframes moveX {
-    0% {
-      transform: translateX(0);
-    }
-    50% {
-      transform: translateX(100px);
-    }
-    100% {
-      transform: translateX(0);
-    }
-  }
-
-  .animate-x {
-    animation: moveX 2s ease-in-out infinite;
-  }
-</style>
-{% endblock %} {%block content %}
-<section class="bg-gray-200 p-8">
-  <div class="text-3xl font-bold text-blue-500 animate-x infinite">
-    카이스트 정글 식도락을 찾아주셔서 감사합니다!
-  </div>
-</section>
-<section>
-  <div class="bg-gray-100">
-    <div class="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
-      <div class="mb-8">
-        <!-- 세로 간격을 주는 감싸는 컨테이너 -->
-        <button
-          onclick="openModal()"
-          class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4 md:mt-8"
+{% extends 'layout.html' %} {% block title %}정글 식도락{% endblock %} {%block
+  content %}
+  <section>
+    <h2>프로젝트 목표</h2>
+    <p>이 섹션은 프로젝트의 목표와 목표를 설명합니다.</p>
+  </section>
+  <section>
+    <div class="bg-gray-100">
+      <div class="max-w-6xl mx-auto px-4 md:px-6 lg:px-8">
+        <div class="mb-8">
+          <!-- 세로 간격을 주는 감싸는 컨테이너 -->
+          <button
+            onclick="openModal()"
+            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4 md:mt-8"
+          >
+            맛집 등록하기
+          </button>
+        </div>
+  
+        <div
+          class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3"
         >
-          맛집 등록하기
-        </button>
-      </div>
-
-      <div
-        class="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3"
-      >
-        <!-- 크게 만든 카드 리스트 -->
-        <div id="cardContainer" class="grid grid-cols-3 gap-4"></div>
-        
-        <!-- 필요한 만큼 카드를 추가하여 리스트 확장 가능 -->
+          <!-- 크게 만든 카드 리스트 -->
+          <div id="cardContainer" class="grid grid-cols-3 gap-4"></div>
+          <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
+            <h2 class="text-xl font-bold mb-4">제목 1</h2>
+            <hr />
+            <p class="text-gray-700">내용 1</p>
+            <p class="text-gray-700">내용 2</p>
+            <p class="text-gray-700">내용 3</p>
+          </div>
+          <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
+            <h2 class="text-xl font-bold mb-4">제목 2</h2>
+            <p class="text-gray-700">내용 2</p>
+          </div>
+          <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
+            <h2 class="text-xl font-bold mb-4">제목 3</h2>
+            <p class="text-gray-700">내용 3</p>
+          </div>
+          <!-- 필요한 만큼 카드를 추가하여 리스트 확장 가능 -->
+          <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
+            <h2 class="text-xl font-bold mb-4">제목 4</h2>
+            <p class="text-gray-700">내용 4</p>
+          </div>
+          <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
+            <h2 class="text-xl font-bold mb-4">제목 5</h2>
+            <p class="text-gray-700">내용 5</p>
+          </div>
+          <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
+            <h2 class="text-xl font-bold mb-4">제목 6</h2>
+            <p class="text-gray-700">내용 6</p>
+          </div>
+          <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
+            <h2 class="text-xl font-bold mb-4">제목 7</h2>
+            <p class="text-gray-700">내용 7</p>
+          </div>
+          <div class="bg-white rounded-lg overflow-hidden shadow-md p-6 card">
+            <h2 class="text-xl font-bold mb-4">제목 8</h2>
+            <p class="text-gray-700">내용 8</p>
+          </div>
+          <!-- 필요한 만큼 카드를 추가하여 리스트 확장 가능 -->
+        </div>
       </div>
     </div>
-  </div>
-</section>
-<!-- 모달 -->
-<div
-  id="myModal"
-  class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden"
->
-  <div class="bg-white rounded-lg p-8 max-w-md mx-auto">
-    <span
-      class="absolute top-2 right-4 cursor-pointer text-2xl"
-      onclick="closeModal()"
-      >&times;</span
-    >
-    <label for="search" class="block mb-2">검색:</label>
-    <input
-      type="text"
-      id="search"
-      name="search"
-      placeholder="정확한 상호명을 입력하세요"
-      class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4"
-    />
-    <button
-      onclick="sendRequest()"
-      class="bg-blue-500 text-white px-4 py-2 rounded-lg mb-4 hover:bg-blue-600"
-    >
-      검색하기
-    </button>
-    <ul id="searchResultList" class="mb-4"></ul>
-    <form>
-      <label id="restaurantNameLabel" class="block mb-2">가게명:</label>
-      <label id="restaurantaddressLabel" class="block mb-2">주소:</label>
-      <label id="restaurantlinkLabel" class="block mb-2">링크:</label>
-      <label for="content" class="block mb-2">내용:</label>
-      <textarea
-        id="content"
-        name="content"
+  </section>
+  <!-- 모달 -->
+  <div
+    id="myModal"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden"
+  >
+    <div class="bg-white rounded-lg p-8 max-w-md mx-auto">
+      <span
+        class="absolute top-2 right-4 cursor-pointer text-2xl"
+        onclick="closeModal()"
+        >&times;</span
+      >
+      <label for="search" class="block mb-2">검색:</label>
+      <input
+        type="text"
+        id="search"
+        name="search"
+        placeholder="정확한 상호명을 입력하세요"
         class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4"
-      ></textarea>
-    </form>
-    <button
-      onclick="saveItem()"
-      class="bg-green-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-green-600"
-    >
-      확인
-    </button>
-    <button
-      onclick="closeModal()"
-      class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-    >
-      취소
-    </button>
+      />
+      <button
+        onclick="sendRequest()"
+        class="bg-blue-500 text-white px-4 py-2 rounded-lg mb-4 hover:bg-blue-600"
+      >
+        검색하기
+      </button>
+      <ul id="searchResultList" class="mb-4"></ul>
+      <form>
+        <label id="restaurantNameLabel" class="block mb-2">가게명:</label>
+        <label id="restaurantaddressLabel" class="block mb-2">주소:</label>
+        <label id="restaurantlinkLabel" class="block mb-2">링크:</label>
+        <label for="content" class="block mb-2">내용:</label>
+        <textarea
+          id="content"
+          name="content"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-4"
+        ></textarea>
+      </form>
+      <button
+        onclick="saveItem()"
+        class="bg-green-500 text-white px-4 py-2 rounded-lg mr-2 hover:bg-green-600"
+      >
+        확인
+      </button>
+      <button
+        onclick="closeModal()"
+        class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+      >
+        취소
+      </button>
+    </div>
   </div>
-</div>
-{% endblock %} {% block script %}
-<!-- 네이버 지도 검색 API 스크립트 -->
-<script
-  type="text/javascript"
-  src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=qwYeDHfb22N5SlsoHEvL"
-></script>
-<script>
-  function openModal() {
-    document.getElementById("myModal").classList.remove("hidden");
-  }
-
-  function closeModal() {
-    document.getElementById("myModal").classList.add("hidden");
-  }
-
-  // 아이템 저장
-  function saveItem() {
-    var title = $("#restaurantNameLabel").text().trim().replace("가게명: ", "");
-    var address = $("#restaurantaddressLabel").text().trim().replace("주소: ", "");
-    var link = $("#restaurantlinkLabel").text().trim().replace("링크: ", "");
-    var content = $("#content").val().trim();
-    // 저장하는 로직을 여기에 추가하세요.
-    
-    $.ajax({
-      url: "/complete/write",
-      type: "POST",
-      data: {
-        title_give: title,
-        address_give: address,
-        link_give: link,
-        content_give: content,
-      },
-      success: function (response) {
-        // 요청이 성공한 경우 처리할 내용
-      },
-      error: function (xhr, status, error) {
-        // 요청이 실패한 경우 처리할 내용
-      },
-    });
-
-    $.ajax({
-      url: "/complete/write",
-      type: "GET",
-      data: {},
-      success: function (response) {
-        // 요청이 성공한 경우 처리할 내용
-        // 데이터가 배열인지 확인
-        if (Array.isArray(response)) {
-            // 배열인 경우 forEach를 사용하여 각각의 요소에 접근
-            response.forEach(function(item) {
-                // 각각의 아이템으로 카드를 생성하고 출력하는 코드
-                var cardHTML = `
-                    <div class="max-w-sm rounded overflow-hidden shadow-lg">
-                        <div class="px-6 py-4">
-                            <p class="font-bold text-xl mb-2">${item.title}</p>
-                            <p class="text-gray-700 text-base">${item.address}</p>
-
-                            <a href="${item.link}" class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">#링크</a>
-                        </div>
-                    </div>
-                `;
-                
-                // 카드를 출력할 요소에 추가
-                $("#cardContainer").append(cardHTML);
-            });
-        } else if (typeof response === 'object') {
-            // 객체인 경우 처리
-            for (var key in response) {
-                // 각 속성에 대한 처리를 여기서 수행
-                var value = response[key];
-                // 실제로 원하는 처리: 객체의 속성을 사용하여 카드를 생성하고 출력
-                var cardHTML = `
-                    <div class="max-w-sm rounded overflow-hidden shadow-lg">
-                        <div class="px-6 py-4">
-                            <div class="font-bold text-xl mb-2">${key}</div>
-                            <p class="text-gray-700 text-base">${value}</p>
-                        </div>
-                    </div>
-                `;
-                
-                // 카드를 출력할 요소에 추가
-                $("#cardContainer").append(cardHTML);
-            }
-        } else {
-            console.error("Response is neither an array nor an object.");
-        }
+  {% endblock %} {% block script %}
+  <!-- 네이버 지도 검색 API 스크립트 -->
+  <script
+    type="text/javascript"
+    src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=qwYeDHfb22N5SlsoHEvL"
+  ></script>
+  <script>
+    function openModal() {
+      document.getElementById("myModal").classList.remove("hidden");
+    }
+  
+    function closeModal() {
+      document.getElementById("myModal").classList.add("hidden");
+    }
+  
+    // 아이템 저장
+    function saveItem() {
+      var title = $("#restaurantNameLabel").text().trim().replace("가게명: ", "");
+      var address = $("#restaurantaddressLabel").text().trim().replace("주소: ", "");
+      var link = $("#restaurantlinkLabel").text().trim().replace("링크: ", "");
+      var content = $("#content").val().trim();
+      // 저장하는 로직을 여기에 추가하세요.
+      
+      $.ajax({
+        url: "/complete/write",
+        type: "POST",
+        data: {
+          title_give: title,
+          address_give: address,
+          link_give: link,
+          content_give: content,
+        },
+        success: function (response) {
+          // 요청이 성공한 경우 처리할 내용
+          response.forEach(function(item) {
+            
+        });
     },
-    error: function (xhr, status, error) {
-        console.error(error);
+        error: function (xhr, status, error) {
+          // 요청이 실패한 경우 처리할 내용
+        },
+      });
+  
+      $.ajax({
+        url: "/complete/write",
+        type: "GET",
+        data: {},
+        success: function (response) {
+          // 요청이 성공한 경우 처리할 내용
+          var cardHTML = `
+                <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+                    <div class="p-4">
+                        <h2 class="text-xl font-bold mb-2">${item.title}</h2>
+                        <p class="text-gray-600">${item.address}</p>
+                    </div>
+                    <div class="px-4 py-2 bg-gray-100">
+                        <a href="${item.link}" class="text-blue-500">링크</a>
+                    </div>
+                </div>
+            `;
+            
+            $("#cardContainer").append(cardHTML);
+        },
+        error: function (xhr, status, error) {
+          // 요청이 실패한 경우 처리할 내용
+        },
+      });
+  
+      // 모달을 닫습니다.
+      closeModal();
     }
-});
-
-    // 모달을 닫습니다.
-    closeModal();
-  }
-
-  function sendRequest() {
-    var search = $("#search").val();
-    $.ajax({
-      url: "/write",
-      type: "POST",
-      data: { search_give: search }, // 검색어를 서버로 전달
-      success: function (response) {
-        var htmltitle = response.title;
-        var title = extractKoreanFromHTML(htmltitle);
-        var address = response.address;
-        var link = response.link;
-
-        $("#restaurantNameLabel").text("가게명: " + title); // 모달 내 "가게명" 옆에 가게명 설정
-        $("#restaurantaddressLabel").text("주소: " + address); // 모달 내 "주소" 옆에 가게명 설정
-        $("#restaurantlinkLabel").html("링크: <a href='" + link + "'>" + link + "</a>"); // 모달 내 "링크" 옆에 가게명 설정
-      },
-    });
-  }
-
-  function extractKoreanFromHTML(html) {
-    // HTML 태그 제거
-    var textWithoutTags = html.replace(/<[^>]*>/g, '');
-    // 한글만 추출
-    var koreanOnly = textWithoutTags.match(/[가-힣]+/g);
-    // 배열을 문자열로 변환
-    if (koreanOnly) {
-        return koreanOnly.join('');
-    } else {
-        return '';
+  
+    function sendRequest() {
+      var search = $("#search").val();
+      $.ajax({
+        url: "/write",
+        type: "POST",
+        data: { search_give: search }, // 검색어를 서버로 전달
+        success: function (response) {
+          var htmltitle = response.title;
+          var title = extractKoreanFromHTML(htmltitle);
+          var address = response.address;
+          var link = response.link;
+  
+          $("#restaurantNameLabel").text("가게명: " + title); // 모달 내 "가게명" 옆에 가게명 설정
+          $("#restaurantaddressLabel").text("주소: " + address); // 모달 내 "주소" 옆에 가게명 설정
+          $("#restaurantlinkLabel").html("링크: <a href='" + link + "'>" + link + "</a>"); // 모달 내 "링크" 옆에 가게명 설정
+        },
+      });
     }
-}
-</script>
-{% endblock %}
+  
+    function extractKoreanFromHTML(html) {
+      // HTML 태그 제거
+      var textWithoutTags = html.replace(/<[^>]*>/g, '');
+      // 한글만 추출
+      var koreanOnly = textWithoutTags.match(/[가-힣]+/g);
+      // 배열을 문자열로 변환
+      if (koreanOnly) {
+          return koreanOnly.join('');
+      } else {
+          return '';
+      }
+  }
+  </script>
+  {% endblock %}
+  

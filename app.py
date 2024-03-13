@@ -45,6 +45,12 @@ def register():
       # 회원가입
       username_receive = request.form['username_give']
       password_receive = request.form['password_give']
+
+      is_existed = db.users.find_one({'username': username_receive})
+
+      if is_existed:
+        return jsonify({'result':'error','message':"중복된 이름입니다."})         
+
       # 비밀번화 암호화
       password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
       # 회원 정보

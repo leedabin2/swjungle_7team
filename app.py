@@ -70,6 +70,7 @@ def login():
       expires_delta = datetime.timedelta(minutes=30)
       access_token = create_access_token(identity=username_receive, expires_delta=expires_delta)
       resp = jsonify({'login': True})
+  
       set_access_cookies(resp, access_token)
       # 클라이언트에 200과 함께 토큰 전송
       return resp, 200
@@ -146,12 +147,12 @@ def get_recent_register_info():
     recent_register = db.registerlist.find_one({}, {'_id': 0}, sort=[('_id', -1)])  # 최근 데이터 한 개 가져오기
     return jsonify(recent_register)
 
-
 # 로그아웃
 @app.route('/logout', methods=['POST'])
+@jwt_required()
 def logout():
-    resp = jsonify({'logout': True})
-    unset_jwt_cookies(resp)
+    resp = jsonify({'logout': True}) # 응답 객체 생성
+    unset_jwt_cookies(resp) # JWT 쿠키 제거
     return resp, 200
 
 if __name__ == '__main__':

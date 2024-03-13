@@ -168,10 +168,10 @@ def register_info():
     
     db.registerlist.insert_one(register_doc)
     
-    return jsonify({'result':'success'}), 200
+    return render_template("index.html", title=title_receive, link=link_receive, address=address_receive, username=username), 200
   
 # 클라이언트 card등록되게 보내줌
-@app.route('/complete/write')
+@app.route('/complete/write', methods=["GET"])
 def get_register_info():
   all_register_list = list(db.registerlist.find({},{'_id':0}))
   all_register_list_to_json = json.dumps(all_register_list) 

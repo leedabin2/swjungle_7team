@@ -137,7 +137,7 @@ def register_info():
     content_receive = request.form['content_give']
     username = get_jwt_identity()
     
-    register_doc = { 'title' : title_receive , 'link' : link_receive, 'address': address_receive, 'username' : username}
+    register_doc = { 'title' : title_receive , 'link' : link_receive, 'address': address_receive, 'username' : username , 'content' : content_receive}
 
     db.registerlist.insert_one(register_doc)
     return jsonify({"message":"success"}), 200

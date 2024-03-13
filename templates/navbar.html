@@ -4,24 +4,10 @@
       <a href="/" class="text-lg font-bold">도시락</a>
       <ul class="flex justify-end">
         <li class="mr-4">
-          <a
-            id="login-nav"
-            href="/login"
-            style="display: none"
-            class="hover:text-gray-300 transition duration-300 ease-in-out"
-            onclick="redirectToLoginPage()"
-            >로그인</a
-          >
+          <a id="login-nav" href="/login" style="display: none" class="hover:text-gray-300 transition duration-300 ease-in-out" onclick="redirectToLoginPage()">로그인</a>
         </li>
         <li>
-          <a
-            id="logout-nav"
-            href="#"
-            style="display: none"
-            class="hover:text-gray-300 transition duration-300 ease-in-out"
-            onclick="confirmLogout()"
-            >로그아웃</a
-          >
+          <a id="logout-nav" href="#" style="display: none" class="hover:text-gray-300 transition duration-300 ease-in-out" onclick="confirmLogout()">로그아웃</a>
         </li>
       </ul>
     </div>
@@ -29,60 +15,48 @@
 </nav>
 
 <script>
-  // 쿠키에서 특정 이름의 값을 가져오는 함수
-  function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-      const cookies = document.cookie.split(";");
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        // 이 쿠키의 이름이 요청한 이름과 일치하는지 확인
-        if (cookie.substring(0, name.length + 1) === name + "=") {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
-      }
-    }
-    return cookieValue;
-  }
 
-  const token = getCookie("access_token"); // 쿠키에서 토큰 읽어오기
+  var token = localStorage.getItem('token');
 
-  const logoutButton = document.getElementById("logout-nav");
-  const loginButton = document.getElementById("login-nav");
-
+  var loginButton = document.getElementById('login-nav')
+  var logoutButton = document.getElementById('logout-nav')
+  
   if (token) {
-    logoutButton.style.display = "inline-block"; // 로그아웃 버튼 표시
+    // 로그인 상태인 경우의 처리
+    logoutButton.style.display = 'inline-block' 
+    loginButton.style.display = 'none' 
   } else {
-    loginButton.style.display = "inline-block"; // 로그인 버튼 표시
+    // 로그인 상태가 아닌 경우의 처리
+    loginButton.style.display = 'inline-block' 
+    logoutButton.style.display = 'none' 
   }
-
+  
   function redirectToLoginPage() {
-    // 로그인 페이지로 이동합니다.
-    window.location.href = "/login";
+    // 로그인 페이지로 이동
+    window.location.href = '/login'
   }
-
+  
   function confirmLogout() {
-    // 로그아웃을 진행하기 전에 사용자에게 확인 메시지를 띄웁니다.
-    var confirmLogout = confirm("정말 로그아웃 하시겠습니까?");
-
+    // 로그아웃을 진행하기 전에 사용자에게 확인 메시지
+    var confirmLogout = confirm('정말 로그아웃 하시겠습니까?')
+  
     if (confirmLogout) {
-      // 사용자가 확인을 클릭한 경우, 로그아웃을 진행합니다.
-
+      // 사용자가 확인을 클릭한 경우, 로그아웃을 진행
+  
       $.ajax({
-        url: "/logout",
-        type: "POST",
+        url: '/logout',
+        type: 'POST',
         data: {
-          logout_give: true,
+          logout_give: true
         },
         success: function (response) {
           // 요청이 성공한 경우 처리할 내용
           if (response.logout) {
-            window.location.reload();
+            localStorage.removeItem('token');
+            window.location.reload()
           }
-        },
-      });
-      //window.location.reload(); // 페이지 새로고침
+        }
+      })
     }
   }
 </script>

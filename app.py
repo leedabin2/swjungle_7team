@@ -69,7 +69,7 @@ def login():
       # jwt 토큰 발급 (유효기간 30분)
       expires_delta = datetime.timedelta(minutes=30)
       access_token = create_access_token(identity=username_receive, expires_delta=expires_delta)
-      resp = jsonify({'login': True})
+      resp = jsonify({'login': True, 'token': access_token})
   
       set_access_cookies(resp, access_token)
       # 클라이언트에 200과 함께 토큰 전송
@@ -135,7 +135,7 @@ def register_info():
     link_receive = request.form['link_give']
     address_receive = request.form['address_give']
     username = get_jwt_identity()
-    print(username)
+    
     register_doc = { 'title' : title_receive , 'link' : link_receive, 'address': address_receive, 'username' : username}
     db.registerlist.insert_one(register_doc)
     return render_template("index.html", title=title_receive, link=link_receive, address=address_receive, username=username), 200
@@ -147,6 +147,30 @@ def get_recent_register_info():
     recent_register = db.registerlist.find_one({}, {'_id': 0}, sort=[('_id', -1)])  # 최근 데이터 한 개 가져오기
     return jsonify(recent_register)
 
+# 클라이언트에서 받은 up버튼을 db에 저
+@app.route('/up', methods=["POST"])
+@jwt_required()
+def post_up_button():
+  id_receive = request.form['id_give']
+  upvote_count = request.json['upvote_count']
+  username_receive = get_jwt_identity() 
+  #user_receive = request.form['username_receive']
+  
+  # 업데이트된 숫자를 새로운 데이터베이스에 저장
+  upvote_data = {
+      'upvote_count': upvote_count,
+      'username': username_receive
+  }
+  
+  # 해당 카드에 대해 up 버튼을 이미 눌렀는지 확인
+  existing_vote = db.registerlist.find_one({'_id': id_receive, 'up_voters': username_receive})
+  
+  # 여기에 새로운 데이터베이스에 저장하는 코드
+  upvote = db.upvote.insert_one(upvote_data)
+
+  return jsonify(upvote), 200
+
+  
 # 로그아웃
 @app.route('/logout', methods=['POST'])
 @jwt_required()

@@ -31,6 +31,7 @@ app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 ca = certifi.where()
 client = MongoClient(ca_path, tlsCAFile=ca)
 db = client.dbsparta
+
 collection = db.restaurantlist
 
 @app.route('/')

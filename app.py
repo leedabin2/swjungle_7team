@@ -81,7 +81,6 @@ def login():
 
 # 네이버 검사 API
 @app.route('/write', methods=['POST'])
-@jwt_required()
 def search_restaurant():
     search_receive = request.form['search_give']
     encText = urllib.parse.quote(search_receive)
@@ -131,7 +130,6 @@ def register_info():
   
 # 클라이언트 모든 것을  응답
 @app.route('/complete/write', methods=["GET"])
-@jwt_required()
 def get_recent_register_info():
     cards =  list(db.registerlist.find({}, {'_id': 0}))
     return jsonify({"cards": cards})

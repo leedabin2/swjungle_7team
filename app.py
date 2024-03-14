@@ -109,7 +109,11 @@ def login():
 @app.route('/write', methods=['POST'])
 def search_restaurant():
     search_receive = request.form['search_give']
-    encText = urllib.parse.quote(search_receive)
+
+    if not search_receive:
+       return jsonify({'result' : "error", 'message' : "검색값은 필수 입니다."})
+
+    encText = urllib.parse.quote("대전광역시 전민동"+search_receive)
     url = "https://openapi.naver.com/v1/search/local?query=" + encText # JSON 결과
     req = urllib.request.Request(url)
     req.add_header("X-Naver-Client-Id",client_id)
@@ -121,11 +125,14 @@ def search_restaurant():
         print(response_body.decode('utf-8'))
         resp_data = response_body.decode('utf-8')
         resp_data = json.loads(response_body.decode('utf-8'))
+
+        if not resp_data['items']:
+            return jsonify({'result' : "error", 'message' : "존재하지 않는 가게 같습니다."})
+
         for item in resp_data['items']:
             title = item['title']
-            link = item['link']
             address = item['address']
-        restaurant_doc = {'title' : title, 'link' : link, 'address' : address}
+        restaurant_doc = {'result' : "success", 'title' : title, 'address' : address}
      
         return jsonify(restaurant_doc)
     else:
@@ -139,6 +146,19 @@ def food_info():
     title_receive = request.form['title_give']
     address_receive = request.form['address_give']
     content_receive = request.form['content_give']
+
+    if not title_receive:
+       return jsonify({'result':'error', 'message':'가게명 정보는 필수입니다.'})
+    if not address_receive:
+       return jsonify({'result':'error', 'message':'도로명주소 정보는 필수입니다.'})
+    if not content_receive:
+       return jsonify({'result':'error', 'message':'내용 정보는 필수입니다.'})
+    
+    isExisted = db.registerlist.find_one({'title': title_receive})
+
+    if isExisted:
+       return jsonify({'result':'error', 'message':'이미 존재하는 가게정보 입니다.'})
+
     username = get_jwt_identity()
 
     count = db.registerlist.count_documents({})
@@ -150,7 +170,7 @@ def food_info():
     food_doc = { 'key': key,  "number": 0, 'title' : title_receive , 'address': address_receive, 'username' : username, 'content': content_receive}
     
     db.registerlist.insert_one(food_doc)
-    return jsonify({"message":"success"}), 200
+    return jsonify({"result":"success"}), 200
   
   
 # 클라이언트 모든 것을  응답

@@ -167,7 +167,7 @@ def food_info():
     if count != 0:
        key = db.registerlist.find_one(sort=[("key", -1)])["key"] + 1
 
-    food_doc = { 'key': key,  "number": 0, 'title' : title_receive , 'address': address_receive, 'username' : username, 'content': content_receive}
+    food_doc = { 'key': key, 'title' : title_receive , 'address': address_receive, 'username' : username, 'content': content_receive,'recommends':[]}
     
     db.registerlist.insert_one(food_doc)
     return jsonify({"result":"success"}), 200
@@ -176,7 +176,7 @@ def food_info():
 # 클라이언트 모든 것을  응답
 @app.route('/complete/write', methods=["GET"])
 def get_recent_register_info():
-    cards =  list(db.registerlist.find({}, {'_id': 0}).sort([('number', -1), ('key', -1)]))
+    cards = sorted(db.registerlist.find({}, {'_id': 0}), key=lambda x: (len(x.get('recommends', [])), -x['key']), reverse=True)
     return jsonify({"cards": cards})
 
   
@@ -193,8 +193,14 @@ def logout():
 @jwt_required()
 def post_up_button_count():
   key_receive = request.form['key']
-  db.registerlist.update_one({"key": int(key_receive)}, {"$inc": {"number": 1}})
-  return jsonify(), 200
+
+  username = get_jwt_identity()
+
+  isExisted = db.registerlist.find_one({"key": int(key_receive), "recommends": {"$elemMatch": {"$eq": username}}})
+  if isExisted:
+     return jsonify({'result':"error","message":"이미 추천하셨습니다."})
+  db.registerlist.update_one({"key": int(key_receive)}, {"$push": {"recommends": username}})
+  return jsonify({'result':"success"}), 200
 
 # 보호된 엔드포인트
 @app.route('/protected', methods=['GET'])
